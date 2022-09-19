@@ -33,14 +33,10 @@
     <ClCompile Include="BOJ1006.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="BOJ11333.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BOJ1051.cpp">
-=======
-    <ClCompile Include="BOJ1114.cpp">
->>>>>>> origin/main
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
