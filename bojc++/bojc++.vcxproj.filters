@@ -39,5 +39,11 @@
     <ClCompile Include="BOJ1051.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ1114.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\CTest\CTest\BOJ1165.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
