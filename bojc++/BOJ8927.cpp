@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
-#define PRECISION(n) cout<<fixed,cout.precision(n)
 
 using namespace std;
 typedef long long int64;
@@ -112,28 +111,58 @@ vector<vector2d> graham_scan(vector2d* points, int size)
     return sortedPoints;
 }
 
-vector2d point[5000];
+int64 rotating_calipers(vector2d* points, int size)
+{
+    int64 distanceSqrMax = 0;
+    vector2d zeroVector = vector2d();
+    int j = 1;
+
+    for (int i = 0; i < size; i++)
+    {
+        int iNext = (i + 1) % size;
+        vector2d iVector = points[iNext] - points[i];
+
+        do
+        {
+            int jNext = (j + 1) % size;
+            vector2d jVector = points[jNext] - points[j];
+
+            if (orientation(zeroVector, iVector, jVector) < 0)
+                j = jNext;
+            else
+                break;
+        } while (true);
+
+        distanceSqrMax = max(distanceSqrMax, sqr_magnitude(points[i] - points[j]));
+    }
+
+    return distanceSqrMax;
+}
+
+vector2d point[400000];
 
 int main()
 {
-    FASTIO();
-    PRECISION(2);
+	FASTIO();
 
-    int n;
-    cin >> n;
+    int t;
+    cin >> t;
 
-    for (int i = 0; i < n; ++i)
-        cin >> point[i].x >> point[i].y;
+    while (t-- > 0) {
+        int n;
+        cin >> n;
 
-    vector<vector2d> hullPoints = graham_scan(point, n);
+        for (int i = 0; i < n; ++i) {
+            int x, y, w;
+            cin >> x >> y >> w;
 
-    double d = 0.0;
-    for (int i = 0; i < hullPoints.size(); i++)
-    {
-        vector2d delta = hullPoints[(i + 1) % hullPoints.size()] - hullPoints[i];
-        d += sqrt(delta.x * delta.x + delta.y * delta.y);
+            point[i * 4] = vector2d(x, y);
+            point[i * 4 + 1] = vector2d(x + w, y);
+            point[i * 4 + 2] = vector2d(x, y + w);
+            point[i * 4 + 3] = vector2d(x + w, y + w);
+        }
+
+        vector<vector2d> shell_points = graham_scan(point, n * 4);
+        cout << rotating_calipers(shell_points.data(), shell_points.size()) << "\n";
     }
-
-    cout << d << endl;
-    return 0;
 }

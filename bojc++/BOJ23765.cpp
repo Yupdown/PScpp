@@ -49,6 +49,11 @@ inline int64 sqr_magnitude(const vector2d& v)
     return v.x * v.x + v.y * v.y;
 }
 
+inline int64 cross_magnitude(const vector2d& p1, const vector2d& p2, const vector2d& p3)
+{
+    return abs((p1.x * p2.y + p2.x * p3.y + p3.x * p1.y) - (p1.x * p3.y + p2.x * p1.y + p3.x * p2.y));
+}
+
 vector<vector2d> graham_scan(vector2d* points, int size)
 {
     int pivot = 0;
@@ -112,28 +117,72 @@ vector<vector2d> graham_scan(vector2d* points, int size)
     return sortedPoints;
 }
 
-vector2d point[5000];
+vector2d point[400];
+int64 memo[400][400][10];
 
 int main()
 {
     FASTIO();
-    PRECISION(2);
+    PRECISION(1);
 
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
     for (int i = 0; i < n; ++i)
         cin >> point[i].x >> point[i].y;
 
-    vector<vector2d> hullPoints = graham_scan(point, n);
+    vector<vector2d> hull_points = graham_scan(point, n);
+    int m = hull_points.size();
 
-    double d = 0.0;
-    for (int i = 0; i < hullPoints.size(); i++)
+    int c = 0;
+    for (int i = 0; i < m; ++i)
     {
-        vector2d delta = hullPoints[(i + 1) % hullPoints.size()] - hullPoints[i];
-        d += sqrt(delta.x * delta.x + delta.y * delta.y);
+        for (int j = i + 1; j < m; ++j)
+        {
+            for (int k = j + 1; k < m; ++k)
+            {
+                int64 magnitude = cross_magnitude(hull_points[i], hull_points[j], hull_points[k]);
+
+                memo[i][j][0] = max(memo[i][j][0], magnitude);
+                memo[j][k][0] = max(memo[j][k][0], magnitude);
+                memo[k][i][0] = max(memo[k][i][0], magnitude);
+
+                ++c;
+            }
+        }
     }
 
-    cout << d << endl;
-    return 0;
+    for (int l = 1; l < k - 2; ++l)
+    {
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = 0; j < m; ++j)
+            {
+                if (i == j)
+                    continue;
+
+                int lhs = i;
+                int rhs = j > i ? j : j + m;
+
+                ++c;
+
+                /*for (int mid = lhs + 1; mid < rhs; ++mid)
+                {
+                    int64 magnitude = cross_magnitude(hull_points[i], hull_points[mid % m], hull_points[j]);
+                    memo[i][j][l] = max(memo[i][j][l], max(memo[i][mid % m][l - 1], memo[mid % m][j][l - 1]) + magnitude);
+
+                    ++c;
+                }*/
+            }
+        }
+    }
+
+    int64 vmax = 0;
+    for (int i = 0; i < m; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+            vmax = max(vmax, memo[i][j][k - 3]);
+    }
+
+    cout << c << " " << 0.5 * vmax << endl;
 }
