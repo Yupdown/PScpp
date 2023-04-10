@@ -186,3 +186,39 @@ int main()
 
     cout << c << " " << 0.5 * vmax << endl;
 }
+
+int N, points[400][2];
+int dp[400][14];
+
+int calc_area(int i, int count)
+{
+    if (count >= 3)
+    {
+        int x1 = points[i][0];
+        int y1 = points[i][1];
+        int x2 = points[i - 1][0];
+        int y2 = points[i - 1][1];
+        int x3 = points[i - 2][0];
+        int y3 = points[i - 2][1];
+
+        return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
+    }
+    return 0;
+}
+
+int solve(int i, int count)
+{
+    if (count > 12)
+        return -1e9; // -1,000,000,000
+    if (i == N)
+        return 0;
+    if (dp[i][count] != -1)
+        return dp[i][count];
+
+    int area = calc_area(i, count);
+    int ret = max(solve(i + 1, count), solve(i + 1, count + 1) + area);
+
+    dp[i][count] = ret;
+
+    return ret;
+}
