@@ -624,5 +624,14 @@
     <ClCompile Include="TUK0079.cpp">
       <Filter>Source Files\tukorea</Filter>
     </ClCompile>
+    <ClCompile Include="CF918-G.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1035.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1020.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
