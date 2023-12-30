@@ -4,7 +4,7 @@
 using namespace std;
 
 int ev[100000];
-pair<int, int> table[100000][18];
+pair<int, int> input[100000][18];
 vector<pair<int, int>> edges[100000];
 
 void make_table(int current, int last)
@@ -13,7 +13,7 @@ void make_table(int current, int last)
 		if (edge.first == last)
 			continue;
 
-		table[edge.first][0] = make_pair(current, edge.second);
+		input[edge.first][0] = make_pair(current, edge.second);
 		make_table(edge.first, current);
 	}
 }
@@ -39,20 +39,20 @@ int main()
 	make_table(0, 0);
 	for (int i = 1; i < 18; ++i) {
 		for (int j = 0; j < n; ++j) {
-			pair<int, int> stop = table[table[j][i - 1].first][i - 1];
-			table[j][i] = make_pair(stop.first, table[j][i - 1].second + stop.second);
+			pair<int, int> stop = input[input[j][i - 1].first][i - 1];
+			input[j][i] = make_pair(stop.first, input[j][i - 1].second + stop.second);
 		}
 	}
 
 	for (int i = 0; i < n; ++i) {
 		int r = i;
-		while (r != 0 && ev[i] >= table[r][0].second) {
+		while (r != 0 && ev[i] >= input[r][0].second) {
 			int next = 0;
-			while (next < 18 && ev[i] >= table[r][next].second)
+			while (next < 18 && ev[i] >= input[r][next].second)
 				++next;
 
-			ev[i] -= table[r][next - 1].second;
-			r = table[r][next - 1].first;
+			ev[i] -= input[r][next - 1].second;
+			r = input[r][next - 1].first;
 		}
 		cout << r + 1 << "\n";
 	}

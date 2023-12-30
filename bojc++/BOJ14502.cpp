@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int table[8][8];
+int input[8][8];
 int table_temp[8][8];
 
 int simulation(int n, int m)
@@ -14,8 +14,8 @@ int simulation(int n, int m)
 	{
 		for (int j = 0; j < m; ++j)
 		{
-			table_temp[i][j] = table[i][j];
-			switch (table[i][j])
+			table_temp[i][j] = input[i][j];
+			switch (input[i][j])
 			{
 			case 0:
 				++res;
@@ -62,7 +62,7 @@ int combination(int n, int m, int i, int j)
 	int res = 0;
 	for (int k = j; k < n * m; ++k)
 	{
-		int* ptr = &table[k / m][k % m];
+		int* ptr = &input[k / m][k % m];
 		if (*ptr > 0)
 			continue;
 
@@ -85,7 +85,7 @@ int main()
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = 0; j < m; ++j)
-			cin >> table[i][j];
+			cin >> input[i][j];
 	}
 
 	cout << combination(n, m, 0, 0);

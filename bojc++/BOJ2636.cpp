@@ -2,7 +2,7 @@
 #define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
 
 using namespace std;
-int table[100][100];
+int input[100][100];
 
 int simulate(int n, int m, int c)
 {
@@ -13,7 +13,7 @@ int simulate(int n, int m, int c)
 	{
 		for (int j = 0; j < m; ++j)
 		{
-			res += table[i][j] < 0;
+			res += input[i][j] < 0;
 			if (i == 0 || i + 1 == n || j == 0 || j + 1 == m)
 				exp.push(make_pair(i, j));
 		}
@@ -27,7 +27,7 @@ int simulate(int n, int m, int c)
 		pair<int, int> cur = exp.front();
 		exp.pop();
 
-		if (table[cur.first][cur.second] >= c)
+		if (input[cur.first][cur.second] >= c)
 			continue;
 
 		queue<pair<int, int>> bfs;
@@ -49,7 +49,7 @@ int simulate(int n, int m, int c)
 					if (next_nodes[j][1] < 0 || next_nodes[j][1] >= m)
 						continue;
 
-					int* ptr = &table[next_nodes[j][0]][next_nodes[j][1]];
+					int* ptr = &input[next_nodes[j][0]][next_nodes[j][1]];
 					if (*ptr >= c)
 						continue;
 
@@ -77,7 +77,7 @@ int main()
 		{
 			int v;
 			cin >> v;
-			table[i][j] = -v;
+			input[i][j] = -v;
 		}
 	}
 

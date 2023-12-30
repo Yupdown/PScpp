@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int n, p, table[16][16], memo[1 << 16];
+int n, p, input[16][16], memo[1 << 16];
 
 int Function(int cnt, int bitmask)
 {
@@ -22,9 +22,9 @@ int Function(int cnt, int bitmask)
 		for (int i = 0; i < n; ++i)
 		{
 			if (bitmask & 1 << i)
-				means = (means < 0 || table[i][next] < table[means][next]) ? i : means;
+				means = (means < 0 || input[i][next] < input[means][next]) ? i : means;
 		}
-		res = min(res, Function(cnt + 1, bitmask | 1 << next) + table[means][next]);
+		res = min(res, Function(cnt + 1, bitmask | 1 << next) + input[means][next]);
 	}
 
 	return memo[bitmask] = res;
@@ -36,7 +36,7 @@ int main()
 
 	cin >> n;
 	for (int i = 0; i < n * n; ++i)
-		cin >> table[i / n][i % n];
+		cin >> input[i / n][i % n];
 
 	string buffer;
 	cin >> buffer >> p;

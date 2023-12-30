@@ -118,7 +118,7 @@ vector<vector2d> graham_scan(vector2d* points, int size)
 }
 
 vector2d point[400];
-int64 memo[400][400][10];
+int64 memo[4][400][400];
 
 int main()
 {
@@ -133,26 +133,9 @@ int main()
 
     vector<vector2d> hull_points = graham_scan(point, n);
     int m = hull_points.size();
+    int64 result = 0;
 
-    int c = 0;
-    for (int i = 0; i < m; ++i)
-    {
-        for (int j = i + 1; j < m; ++j)
-        {
-            for (int k = j + 1; k < m; ++k)
-            {
-                int64 magnitude = cross_magnitude(hull_points[i], hull_points[j], hull_points[k]);
-
-                memo[i][j][0] = max(memo[i][j][0], magnitude);
-                memo[j][k][0] = max(memo[j][k][0], magnitude);
-                memo[k][i][0] = max(memo[k][i][0], magnitude);
-
-                ++c;
-            }
-        }
-    }
-
-    for (int l = 1; l < k - 2; ++l)
+    if (m > k)
     {
         for (int i = 0; i < m; ++i)
         {
@@ -160,65 +143,48 @@ int main()
             {
                 if (i == j)
                     continue;
-
-                int lhs = i;
-                int rhs = j > i ? j : j + m;
-
-                ++c;
-
-                /*for (int mid = lhs + 1; mid < rhs; ++mid)
+                for (int q = (i + 1) % m; q != j; q = (q + 1) % m)
+                    memo[1][i][j] = max(memo[1][i][j], cross_magnitude(hull_points[i], hull_points[j], hull_points[q]));
+            }
+        }
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = 0; j < m; ++j)
+            {
+                if (i == j)
+                    continue;
+                for (int q = (i + 1) % m; q != j; q = (q + 1) % m)
                 {
-                    int64 magnitude = cross_magnitude(hull_points[i], hull_points[mid % m], hull_points[j]);
-                    memo[i][j][l] = max(memo[i][j][l], max(memo[i][mid % m][l - 1], memo[mid % m][j][l - 1]) + magnitude);
-
-                    ++c;
-                }*/
+                    int64 size = cross_magnitude(hull_points[i], hull_points[j], hull_points[q]);
+                    memo[2][i][j] = max(memo[2][i][j], memo[1][i][q] + size);
+                    memo[3][i][j] = max(memo[3][i][j], memo[1][i][q] + memo[1][q][j] + size);
+                }
+            }
+        }
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = 0; j < m; ++j)
+            {
+                memo[2][i][j] = max(memo[1][i][j], memo[2][i][j]);
+                memo[3][i][j] = max(memo[2][i][j], memo[3][i][j]);
+            }
+        }
+        int p[3];
+        for (int i = 0; i < 3; ++i)
+            p[i] = max(min(3, k - 3 * (i + 1)), 0);
+        for (int i = 0; i < m; ++i)
+        {
+            for (int j = i; j < m; ++j)
+            {
+                for (int q = j; q < m; ++q)
+                    result = max(result, memo[p[0]][i][j] + memo[p[1]][j][q] + memo[p[2]][q][i] + cross_magnitude(hull_points[i], hull_points[j], hull_points[q]));
             }
         }
     }
-
-    int64 vmax = 0;
-    for (int i = 0; i < m; ++i)
+    else
     {
-        for (int j = 0; j < m; ++j)
-            vmax = max(vmax, memo[i][j][k - 3]);
+        for (int i = 1; i + 1 < m; ++i)
+            result += cross_magnitude(hull_points[0], hull_points[i], hull_points[i + 1]);
     }
-
-    cout << c << " " << 0.5 * vmax << endl;
-}
-
-int N, points[400][2];
-int dp[400][14];
-
-int calc_area(int i, int count)
-{
-    if (count >= 3)
-    {
-        int x1 = points[i][0];
-        int y1 = points[i][1];
-        int x2 = points[i - 1][0];
-        int y2 = points[i - 1][1];
-        int x3 = points[i - 2][0];
-        int y3 = points[i - 2][1];
-
-        return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
-    }
-    return 0;
-}
-
-int solve(int i, int count)
-{
-    if (count > 12)
-        return -1e9; // -1,000,000,000
-    if (i == N)
-        return 0;
-    if (dp[i][count] != -1)
-        return dp[i][count];
-
-    int area = calc_area(i, count);
-    int ret = max(solve(i + 1, count), solve(i + 1, count + 1) + area);
-
-    dp[i][count] = ret;
-
-    return ret;
+    cout << static_cast<double>(result) * 0.5;
 }

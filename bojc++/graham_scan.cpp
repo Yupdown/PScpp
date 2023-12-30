@@ -34,6 +34,80 @@ struct vector2d
     {
         return vector2d(-x, -y);
     }
+
+    vector2d operator*(const int64& scalar) const
+    {
+		return vector2d(x * scalar, y * scalar);
+	}
+
+    vector2d operator/(const int64& scalar) const
+    {
+		return vector2d(x / scalar, y / scalar);
+	}
+
+    vector2d operator+=(const vector2d& other)
+    {
+		x += other.x;
+		y += other.y;
+		return *this;
+	}
+
+    vector2d operator-=(const vector2d& other)
+    {
+		x -= other.x;
+		y -= other.y;
+		return *this;
+	}
+
+    vector2d operator*=(const int64& scalar)
+    {
+		x *= scalar;
+		y *= scalar;
+		return *this;
+	}
+
+    vector2d operator/=(const int64& scalar)
+    {
+		x /= scalar;
+		y /= scalar;
+		return *this;
+	}
+
+    bool operator==(const vector2d& other) const
+    {
+		return x == other.x && y == other.y;
+	}
+
+    bool operator!=(const vector2d& other) const
+    {
+		return x != other.x || y != other.y;
+	}
+
+    bool operator<(const vector2d& other) const
+    {
+		return x < other.x || (x == other.x && y < other.y);
+	}
+
+    bool operator>(const vector2d& other) const
+    {
+		return x > other.x || (x == other.x && y > other.y);
+	}
+
+    bool operator<=(const vector2d& other) const
+    {
+		return x <= other.x && y <= other.y;
+	}
+
+    bool operator>=(const vector2d& other) const
+    {
+		return x >= other.x && y >= other.y;
+	}
+
+    friend std::ostream& operator<<(std::ostream& os, const vector2d& v)
+    {
+		os << "(" << v.x << ", " << v.y << ")";
+		return os;
+	}
 };
 
 inline int orientation(const vector2d& a, const vector2d& b, const vector2d& c)
