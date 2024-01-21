@@ -735,5 +735,71 @@
     <ClCompile Include="BOJ2141.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ2110.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ9466.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1937.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1025.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1520.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ17425.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2143.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="CF161-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF161-B.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF161-C.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF161-D.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF581-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ14756.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="CF790-E.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF790-D.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11437.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11812.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1034.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1043.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ13511.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1014.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1090.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
