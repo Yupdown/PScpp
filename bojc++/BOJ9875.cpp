@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
 
 using namespace std;
 using int64 = long long;
@@ -49,12 +50,12 @@ vector<vector2d> graham_scan(vector2d* points, int size)
 
     std::swap(points[0], points[pivot]);
     std::sort(points + 1, points + size, [=](const vector2d& a, const vector2d& b) -> bool
-    {
-        int orient = orientation(points[0], a, b);
-        if (orient != 0)
-            return orient < 0;
-        return sqr_magnitude((vector2d)a - points[0]) < sqr_magnitude((vector2d)b - points[0]);
-    });
+        {
+            int orient = orientation(points[0], a, b);
+            if (orient != 0)
+                return orient < 0;
+            return sqr_magnitude((vector2d)a - points[0]) < sqr_magnitude((vector2d)b - points[0]);
+        });
 
     vector<vector2d> sortedPoints;
     sortedPoints.push_back(points[0]);
@@ -102,4 +103,60 @@ vector<vector2d> graham_scan(vector2d* points, int size)
         return shellPoints;
     }
     return sortedPoints;
+}
+
+bool get_included_convexhull(vector2d point, const vector<vector2d>& convexhull)
+{
+    int size = convexhull.size();
+    if (size == 0)
+        return false;
+    if (size == 1)
+        return point == convexhull[0];
+    if (size == 2)
+        return orientation(convexhull[0], convexhull[1], point) == 0 && sqr_magnitude(convexhull[0] - point) + sqr_magnitude(convexhull[1] - point) <= sqr_magnitude(convexhull[0] - convexhull[1]);
+    if (orientation(convexhull[0], convexhull[1], point) > 0)
+        return false;
+    if (orientation(convexhull[0], convexhull[size - 1], point) < 0)
+        return false;
+
+    int first = 1, last = size - 1, target = 0;
+    while (first + 1 < last)
+    {
+        int mid = (first + last) / 2;
+        if (orientation(convexhull[0], convexhull[mid], point) <= 0)
+            first = mid;
+        else
+            last = mid;
+    }
+    return orientation(convexhull[first], convexhull[(first + 1) % size], point) <= 0;
+}
+
+vector2d points[2][50000];
+
+int main()
+{
+    FASTIO();
+
+    int n;
+    cin >> n;
+
+    for (int i = 0; i < n * 2; ++i)
+    {
+        auto& ref = points[i / n][i % n];
+        cin >> ref.x >> ref.y;
+    }
+
+    vector<vector2d> hullA = graham_scan(points[0], n);
+    vector<vector2d> hullB = graham_scan(points[1], n);
+
+    int va = 0;
+    int vb = 0;
+
+    for (int i = 0; i < n; ++i)
+    {
+        va += get_included_convexhull(points[1][i], hullA);
+        vb += get_included_convexhull(points[0][i], hullB);
+    }
+
+    cout << va << ' ' << vb;
 }
