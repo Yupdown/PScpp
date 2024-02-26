@@ -843,9 +843,6 @@
     <ClCompile Include="BOJ10787.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
-    <ClCompile Include="BOJ1648.cpp">
-      <Filter>Source Files\acmicpc</Filter>
-    </ClCompile>
     <ClCompile Include="BOJ15897.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
@@ -925,6 +922,42 @@
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
     <ClCompile Include="BOJ2470.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2673.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11377.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11376.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2316.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11405.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11408.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11407.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ3640.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
   </ItemGroup>
