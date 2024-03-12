@@ -840,9 +840,6 @@
     <ClCompile Include="BOJ10787.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
-    <ClCompile Include="BOJ1648.cpp">
-      <Filter>Source Files\acmicpc</Filter>
-    </ClCompile>
     <ClCompile Include="BOJ15897.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
@@ -882,11 +879,92 @@
     <ClCompile Include="BOJ1239-G.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ1062.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ30802.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1233-1.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1233-2.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1233-3.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1233-4.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1233-5.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="TUK0068.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
+    <ClCompile Include="TUK0022.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
+    <ClCompile Include="TUK0036.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
+    <ClCompile Include="TUK0015.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
+    <ClCompile Include="TUK0082.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ22977.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2470.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2673.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11377.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11376.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2316.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11405.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11408.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ11407.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ3640.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
     <ClCompile Include="BOJ18903.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
     <ClCompile Include="BOJ2191.cpp">
       <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
