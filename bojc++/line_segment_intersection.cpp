@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-typedef long long int64;
+using int64 = long long;
 
 struct vector2d
 {
