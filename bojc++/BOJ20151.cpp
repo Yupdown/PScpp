@@ -30,34 +30,12 @@ struct line2d
 
     bool operator<(const line2d& rhs) const
     {
-        int128 y1 = p1.y * (p2.x - p1.x) + (px - p1.x) * (p2.y - p1.y);
-        int128 y2 = rhs.p1.y * (rhs.p2.x - rhs.p1.x) + (px - rhs.p1.x) * (rhs.p2.y - rhs.p1.y);
-        int128 y1den = p2.x - p1.x;
-        int128 y2den = rhs.p2.x - rhs.p1.x;
-        int128 r1[4];
-        int128 r2[4];
-        int128 mod = 1;
-        mod <<= 64;
-        r1[0] = (y1 % mod) * (y2den % mod);
-        r1[1] = (y1 % mod) * (y2den / mod);
-        r1[2] = (y1 / mod) * (y2den % mod);
-        r1[3] = (y1 / mod) * (y2den / mod);
-        r2[0] = (y2 % mod) * (y1den % mod);
-        r2[1] = (y2 % mod) * (y1den / mod);
-        r2[2] = (y2 / mod) * (y1den % mod);
-        r2[3] = (y2 / mod) * (y1den / mod);
-        for (int i = 0; i < 3; ++i)
-        {
-            r1[i + 1] += r1[i] / mod;
-            r1[i] %= mod;
-            r2[i + 1] += r2[i] / mod;
-            r2[i] %= mod;
-        }
-        for (int i = 3; i >= 0; --i)
-        {
-            if (r1[i] != r2[i])
-                return r1[i] < r2[i];
-        }
+        long double t1 = static_cast<long double>(px - p1.x) / (p2.x - p1.x);
+        long double t2 = static_cast<long double>(px - rhs.p1.x) / (rhs.p2.x - rhs.p1.x);
+        long double y1 = t1 * (p2.y - p1.y) + p1.y;
+        long double y2 = t2 * (rhs.p2.y - rhs.p1.y) + rhs.p1.y;
+        if (y1 != y2)
+            return y1 < y2;
         int128 dx1 = p2.x - p1.x;
         int128 dy1 = p2.y - p1.y;
         int128 dx2 = rhs.p2.x - rhs.p1.x;
@@ -116,7 +94,7 @@ array<int128, 4> points[400000];
 multiset<line2d> intersects;
 int128 line2d::px;
 bool line2d::flag;
-constexpr long long Offset = 2000000001;
+set<long long> delta;
 
 int main()
 {
@@ -124,11 +102,27 @@ int main()
 
     int n;
     cin >> n;
+    int offset = 0;
     for (int i = 0; i < n; ++i)
     {
         long long a, b, c, d;
         cin >> a >> b >> c >> d;
-        lines[i] = { a + b * Offset, b, c + d * Offset, d };
+        lines[i] = { a, b, c, d };
+
+        long long dx = abs(c - a);
+        long long dy = abs(d - b);
+
+        if (dy != 0 && dx % dy == 0)
+            delta.insert(dx / dy);
+    }
+
+    while (delta.find(offset) != delta.end())
+        ++offset;
+
+    for (int i = 0; i < n; ++i)
+    {
+        lines[i].p1.x += lines[i].p1.y * offset;
+        lines[i].p2.x += lines[i].p2.y * offset;
 
         if (lines[i].p1.x > lines[i].p2.x)
             swap(lines[i].p1, lines[i].p2);
