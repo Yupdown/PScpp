@@ -945,17 +945,11 @@
     <ClCompile Include="BOJ3640.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
-    <ClCompile Include="BOJ1648.cpp">
-      <Filter>Source Files\acmicpc</Filter>
-    </ClCompile>
     <ClCompile Include="BOJ13055.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
     <ClCompile Include="fourier_transform.cpp">
       <Filter>Source Files\libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="BOJ1648.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BOJ1000.cpp">
       <Filter>Source Files\acmicpc</Filter>
@@ -1057,6 +1051,15 @@
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
     <ClCompile Include="BOJ2389.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2626.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ15170.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
   </ItemGroup>
