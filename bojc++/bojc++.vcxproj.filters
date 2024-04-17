@@ -954,9 +954,6 @@
     <ClCompile Include="BOJ1000.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
-    <ClCompile Include="BOJ1648.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BOJ11409.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
@@ -1072,6 +1069,18 @@
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
     <ClCompile Include="BOJ10517.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ27948.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ14565.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="mod_inverse.cpp">
+      <Filter>Source Files\libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1648.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
   </ItemGroup>
