@@ -1,4 +1,6 @@
 #include <bits/stdc++.h>
+#define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
+#define PRECISION(n) cout<<fixed,cout.precision(n)
 
 using namespace std;
 
@@ -39,14 +41,50 @@ struct vector2d
 template <typename T>
 inline int orientation(const vector2d<T>& a, const vector2d<T>& b, const vector2d<T>& c)
 {
-    T result = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
-    return result > 0 ? 1 : (result < 0 ? -1 : 0);
+    T result = vector2d<T>::cross(b - a, c - a);
+    return result > 0 ? 1 : result < 0 ? -1 : 0;
 }
 
 template <typename T>
-inline T sqr_magnitude(const vector2d<T>& v)
+bool line_intersection(const vector2d<T>& p1, const vector2d<T>& p2, const vector2d<T>& p3, const vector2d<T>& p4)
 {
-    return v.x * v.x + v.y * v.y;
+    int o1 = orientation(p1, p2, p3);
+    int o2 = orientation(p1, p2, p4);
+    int o3 = orientation(p3, p4, p1);
+    int o4 = orientation(p3, p4, p2);
+
+    if ((!o1 && !o2) || (!o3 && !o4))
+    {
+        T x1, x2, x3, x4;
+        if (p1.x == p2.x && p3.x == p4.x && p1.x == p3.x)
+        {
+            x1 = p1.y;
+            x2 = p2.y;
+            x3 = p3.y;
+            x4 = p4.y;
+        }
+        else
+        {
+            x1 = p1.x;
+            x2 = p2.x;
+            x3 = p3.x;
+            x4 = p4.x;
+        }
+        return max(abs(min(x1, x2) - max(x3, x4)), abs(min(x3, x4) - max(x1, x2))) < abs(x1 - x2) + abs(x3 - x4);
+    }
+    return (o1 * o2 < 0) && (o3 * o4 < 0);
+}
+
+template <typename T>
+vector2d<T> intersection_point(const vector2d<T>& p1, const vector2d<T>& p2, const vector2d<T>& p3, const vector2d<T>& p4)
+{
+    T a11 = p2.x - p1.x;
+    T a12 = p3.x - p4.x;
+    T a21 = p2.y - p1.y;
+    T a22 = p3.y - p4.y;
+    T det = a11 * a22 - a12 * a21;
+    T t = (a22 / det) * (p3.x - p1.x) - (a12 / det) * (p3.y - p1.y);
+    return p1 + (p2 - p1) * t;
 }
 
 template <typename T>
@@ -57,7 +95,7 @@ vector<vector2d<T>> graham_scan(vector2d<T>* points, int size)
         pivot = (points[i].x == points[pivot].x ? points[i].y < points[pivot].y : points[i].x < points[pivot].x) ? i : pivot;
 
     std::swap(points[0], points[pivot]);
-    std::sort(points + 1, points + size, [=](const auto& a, const auto& b) -> bool
+    std::sort(points + 1, points + size, [=](const vector2d<T>& a, const vector2d<T>& b) -> bool
         {
             int orient = orientation(points[0], a, b);
             if (orient != 0)
@@ -100,7 +138,7 @@ vector<vector2d<T>> graham_scan(vector2d<T>* points, int size)
         }
 
         int length = scan.size();
-        vector<vector2d<T>> shellPoints{ length };
+        vector<vector2d<T>> shellPoints = vector<vector2d<T>>(length);
 
         for (int i = 0; i < length; i++)
         {
@@ -111,4 +149,66 @@ vector<vector2d<T>> graham_scan(vector2d<T>* points, int size)
         return shellPoints;
     }
     return sortedPoints;
+}
+
+using vector2di = vector2d<int>;
+using vector2df = vector2d<double>;
+
+vector2di points[2][100];
+vector<vector2df> vertices;
+
+int main()
+{
+	FASTIO();
+	PRECISION(15);
+
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < n; ++i)
+        cin >> points[0][i].x >> points[0][i].y;
+    for (int i = 0; i < m; ++i)
+        cin >> points[1][i].x >> points[1][i].y;
+
+    for (int i = 0; i < n; ++i)
+    {
+        bool flag = true;
+        for (int j = 0; j < m && flag; ++j)
+            flag &= orientation(points[1][j], points[1][(j + 1) % m], points[0][i]) >= 0;
+        if (flag)
+            vertices.emplace_back(points[0][i]);
+    }
+    for (int i = 0; i < m; ++i)
+    {
+        bool flag = true;
+        for (int j = 0; j < n && flag; ++j)
+            flag &= orientation(points[0][j], points[0][(j + 1) % n], points[1][i]) >= 0;
+        if (flag)
+            vertices.emplace_back(points[1][i]);
+    }
+    for (int i = 0; i < n; ++i)
+    {
+        for (int j = 0; j < m; ++j)
+        {
+            vector2di p1 = points[0][i];
+            vector2di p2 = points[0][(i + 1) % n];
+            vector2di p3 = points[1][j];
+            vector2di p4 = points[1][(j + 1) % m];
+            if (line_intersection(p1, p2, p3, p4))
+            {
+                auto ip = intersection_point<double>(p1, p2, p3, p4);
+                if (!isnan(ip.x) && !isnan(ip.y))
+                    vertices.emplace_back(ip);
+            }
+        }
+    }
+    if (vertices.empty())
+    {
+        cout << 0;
+        return 0;
+    }
+    vertices = graham_scan(vertices.data(), vertices.size());
+    double s = 0;
+    for (size_t i = 0; i < vertices.size(); ++i)
+        s += vector2df::cross(vertices[i], vertices[(i + 1) % vertices.size()]);
+    cout << abs(s) * 0.5;
 }
