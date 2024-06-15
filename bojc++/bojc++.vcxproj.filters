@@ -1137,5 +1137,11 @@
     <ClCompile Include="BOJ1077.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ11748.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2536.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
