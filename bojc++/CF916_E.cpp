@@ -3,8 +3,7 @@
 
 using namespace std;
 
-int a[200000];
-int b[200000];
+pair<int, int> table[200000];
 
 int main()
 {
@@ -19,8 +18,21 @@ int main()
 		cin >> n;
 
 		for (int i = 0; i < n; ++i)
-			cin >> a[i];
+			cin >> table[i].first;
 		for (int i = 0; i < n; ++i)
-			cin >> b[i];
+			cin >> table[i].second;
+
+		sort(table, table + n, [](const auto& lhs, const auto& rhs) {return lhs.first + lhs.second > rhs.first + rhs.second; });
+
+		long long r = 0;
+		for (int i = 0; i < n; ++i)
+		{
+			if (i & 1)
+				r -= table[i].second - 1;
+			else
+				r += table[i].first - 1;
+		}
+
+		cout << r << '\n';
 	}
 }
