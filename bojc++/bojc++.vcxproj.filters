@@ -27,7 +27,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="graham_scan.cpp">
+    <ClCompile Include="convex_hull.cpp">
       <Filter>Source Files\libraries</Filter>
     </ClCompile>
     <ClCompile Include="header.cpp">
