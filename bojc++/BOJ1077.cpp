@@ -88,67 +88,30 @@ vector2d<T> intersection_point(const vector2d<T>& p1, const vector2d<T>& p2, con
 }
 
 template <typename T>
-vector<vector2d<T>> graham_scan(vector2d<T>* points, int size)
+vector<vector2d<T>> monotone_chain(vector<vector2d<T>> points)
 {
-    int pivot = 0;
-    for (int i = 1; i < size; i++)
-        pivot = (points[i].x == points[pivot].x ? points[i].y < points[pivot].y : points[i].x < points[pivot].x) ? i : pivot;
+    size_t n = points.size(), k = 0;
+    if (n <= 3)
+        return points;
 
-    std::swap(points[0], points[pivot]);
-    std::sort(points + 1, points + size, [=](const vector2d<T>& a, const vector2d<T>& b) -> bool
-        {
-            int orient = orientation(points[0], a, b);
-            if (orient != 0)
-                return orient < 0;
-            return (a - points[0]).sqr_magnitude() < (b - points[0]).sqr_magnitude();
-        });
+    sort(points.begin(), points.end());
 
-    vector<vector2d<T>> sortedPoints;
-    sortedPoints.push_back(points[0]);
-
-    for (int i = 1; i < size; i++)
+    vector<vector2d<T>> out(n * 2);
+    for (size_t i = 0; i < n; ++i)
     {
-        if (i < size - 1)
-        {
-            if (orientation(points[0], points[i], points[i + 1]) == 0)
-                continue;
-        }
-        sortedPoints.push_back(points[i]);
+        while (k >= 2 && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i];
+    }
+    for (size_t i = n - 1, t = k + 1; i > 0; --i)
+    {
+        while (k >= t && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i - 1] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i - 1];
     }
 
-    size = sortedPoints.size();
-
-    if (size > 2)
-    {
-        int first = 0, second = 0, next = 1;
-        stack<int> scan;
-        scan.push(0);
-
-        while (next < size)
-        {
-            first = second;
-            second = next++;
-            while (orientation(sortedPoints[first], sortedPoints[second], sortedPoints[next % size]) >= 0)
-            {
-                second = first;
-                scan.pop();
-                first = scan.top();
-            }
-            scan.push(second);
-        }
-
-        int length = scan.size();
-        vector<vector2d<T>> shellPoints = vector<vector2d<T>>(length);
-
-        for (int i = 0; i < length; i++)
-        {
-            shellPoints[length - i - 1] = sortedPoints[scan.top()];
-            scan.pop();
-        }
-
-        return shellPoints;
-    }
-    return sortedPoints;
+    out.resize(k - 1);
+    return out;
 }
 
 using vector2di = vector2d<int>;
@@ -206,7 +169,7 @@ int main()
         cout << 0;
         return 0;
     }
-    vertices = graham_scan(vertices.data(), vertices.size());
+    vertices = monotone_chain(vertices);
     double s = 0;
     for (size_t i = 0; i < vertices.size(); ++i)
         s += vector2df::cross(vertices[i], vertices[(i + 1) % vertices.size()]);

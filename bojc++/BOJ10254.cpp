@@ -5,168 +5,121 @@
 using namespace std;
 typedef long long int64;
 
+template <typename T>
 struct vector2d
 {
-    int64 x;
-    int64 y;
+    T x, y;
 
-    vector2d() : vector2d(0LL, 0LL) {}
-    vector2d(int64 x, int64 y)
-    {
-        this->x = x;
-        this->y = y;
-    }
+    vector2d() : vector2d(0, 0) {}
+    vector2d(T x, T y) : x(x), y(y) {}
+    vector2d(const vector2d& rhs) : x(rhs.x), y(rhs.y) {}
+    template <typename TR>
+    vector2d(const vector2d<TR>& rhs) : x(static_cast<T>(rhs.x)), y(static_cast<T>(rhs.y)) {}
 
-    vector2d operator+(const vector2d& other) const
-    {
-        return vector2d(x + other.x, y + other.y);
-    }
+    T sqr_magnitude() const { return x * x + y * y; }
+    T magnitude() const { return sqrt(sqr_magnitude()); }
+    static T dot(const vector2d& lhs, const vector2d& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y; }
+    static T cross(const vector2d& lhs, const vector2d& rhs) { return lhs.x * rhs.y - lhs.y * rhs.x; }
 
-    vector2d operator-(const vector2d& other) const
-    {
-        return vector2d(x - other.x, y - other.y);
-    }
-
-    vector2d operator+()
-    {
-        return vector2d(x, y);
-    }
-
-    vector2d operator-()
-    {
-        return vector2d(-x, -y);
-    }
+    vector2d operator+(const vector2d& other) const { return vector2d(x + other.x, y + other.y); }
+    vector2d operator-(const vector2d& other) const { return vector2d(x - other.x, y - other.y); }
+    vector2d operator+() const { return vector2d(x, y); }
+    vector2d operator-() const { return vector2d(-x, -y); }
+    vector2d operator*(const T& scalar) const { return vector2d(x * scalar, y * scalar); }
+    vector2d operator/(const T& scalar) const { return vector2d(x / scalar, y / scalar); }
+    vector2d& operator+=(const vector2d& other) { x += other.x; y += other.y; return *this; }
+    vector2d& operator-=(const vector2d& other) { x -= other.x; y -= other.y; return *this; }
+    vector2d& operator*=(const T& scalar) { x *= scalar; y *= scalar; return *this; }
+    vector2d& operator/=(const T& scalar) { x /= scalar; y /= scalar; return *this; }
+    bool operator==(const vector2d& other) const { return x == other.x && y == other.y; }
+    bool operator!=(const vector2d& other) const { return x != other.x || y != other.y; }
+    bool operator<(const vector2d& other) const { return x < other.x || (x == other.x && y < other.y); }
+    bool operator>(const vector2d& other) const { return x > other.x || (x == other.x && y > other.y); }
+    bool operator<=(const vector2d& other) const { return x <= other.x && y <= other.y; }
+    bool operator>=(const vector2d& other) const { return x >= other.x && y >= other.y; }
 };
 
-int orientation(const vector2d& a, const vector2d& b, const vector2d& c)
+template <typename T>
+vector<vector2d<T>> monotone_chain(vector<vector2d<T>> points)
 {
-    int64 result = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
-    return result > 0 ? 1 : (result < 0 ? -1 : 0);
-}
+    size_t n = points.size(), k = 0;
+    if (n <= 3)
+        return points;
 
-int64 sqr_magnitude(vector2d v)
-{
-    return v.x * v.x + v.y * v.y;
-}
+    sort(points.begin(), points.end());
 
-vector<vector2d> graham_scan(vector2d* points, int size)
-{
-    int pivot = 0;
-    for (int i = 1; i < size; i++)
-        pivot = (points[i].x == points[pivot].x ? points[i].y < points[pivot].y : points[i].x < points[pivot].x) ? i : pivot;
-
-    std::swap(points[0], points[pivot]);
-    std::sort(points + 1, points + size, [=](const vector2d& a, const vector2d& b) -> bool
-        {
-            int orient = orientation(points[0], a, b);
-            if (orient != 0)
-                return orient < 0;
-            return sqr_magnitude((vector2d)a - points[0]) < sqr_magnitude((vector2d)b - points[0]);
-        });
-
-    vector<vector2d> sortedPoints;
-    sortedPoints.push_back(points[0]);
-
-    for (int i = 1; i < size; i++)
+    vector<vector2d<T>> out(n * 2);
+    for (size_t i = 0; i < n; ++i)
     {
-        if (i < size - 1)
-        {
-            if (orientation(points[0], points[i], points[i + 1]) == 0)
-                continue;
-        }
-        sortedPoints.push_back(points[i]);
+        while (k >= 2 && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i];
+    }
+    for (size_t i = n - 1, t = k + 1; i > 0; --i)
+    {
+        while (k >= t && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i - 1] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i - 1];
     }
 
-    size = sortedPoints.size();
-
-    if (size > 2)
-    {
-        int first = 0, second = 0, next = 1;
-        stack<int> scan;
-        scan.push(0);
-
-        while (next < size)
-        {
-            first = second;
-            second = next++;
-            while (orientation(sortedPoints[first], sortedPoints[second], sortedPoints[next % size]) >= 0)
-            {
-                second = first;
-                scan.pop();
-                first = scan.top();
-            }
-            scan.push(second);
-        }
-
-        int length = scan.size();
-        vector<vector2d> shellPoints = vector<vector2d>(length);
-
-        for (int i = 0; i < length; i++)
-        {
-            shellPoints[length - i - 1] = sortedPoints[scan.top()];
-            scan.pop();
-        }
-
-        return shellPoints;
-    }
-    return sortedPoints;
+    out.resize(k - 1);
+    return out;
 }
 
-pair<vector2d, vector2d> rotating_calipers(vector2d* points, int size)
+template <typename T>
+pair<vector2d<T>, vector2d<T>> rotating_calipers(vector<vector2d<T>> points)
 {
-    pair<vector2d, vector2d> result;
-    int64 magnitude_max = 0;
-    vector2d zeroVector = vector2d();
-    int j = 1;
+    pair<vector2d<T>, vector2d<T>> out;
+    int size = points.size();
+    T magnitude_max = 0;
 
-    for (int i = 0; i < size; i++)
+    for (int i = 0, j = 1; i < size; i++)
     {
         int iNext = (i + 1) % size;
-        vector2d iVector = points[iNext] - points[i];
-
+        vector2d<T> iVector = points[iNext] - points[i];
         do
         {
             int jNext = (j + 1) % size;
-            vector2d jVector = points[jNext] - points[j];
-
-            if (orientation(zeroVector, iVector, jVector) < 0)
+            vector2d<T> jVector = points[jNext] - points[j];
+            if (vector2d<T>::cross(iVector, jVector) > 0)
                 j = jNext;
             else
                 break;
         } while (true);
 
-        int64 magnitude = sqr_magnitude(points[i] - points[j]);
+        T magnitude = (points[i] - points[j]).sqr_magnitude();
         if (magnitude > magnitude_max)
         {
-            result = make_pair(points[i], points[j]);
+            out = make_pair(points[i], points[j]);
             magnitude_max = magnitude;
         }
     }
 
-    return result;
+    return out;
 }
-
-vector2d points[200'000];
 
 int main()
 {
     FASTIO();
 
+    vector<vector2d<int64>> points;
     int t, n;
     cin >> t;
+    
     while (t-- > 0)
     {
         cin >> n;
+        points.resize(n);
 
         for (int i = 0; i < n; i++)
             cin >> points[i].x >> points[i].y;
 
-        vector<vector2d> convexhull = graham_scan(points, n);
+        vector<vector2d<int64>> convexhull = monotone_chain(points);
         int size = convexhull.size();
 
-        pair<vector2d, vector2d> result;
+        pair<vector2d<int64>, vector2d<int64>> result;
         if (size > 2)
-            result = rotating_calipers(convexhull.data(), convexhull.size());
+            result = rotating_calipers(convexhull);
         else
             result = make_pair(convexhull[0], convexhull[1]);
 

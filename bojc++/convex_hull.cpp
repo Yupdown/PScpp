@@ -37,78 +37,60 @@ struct vector2d
 };
 
 template <typename T>
-inline int orientation(const vector2d<T>& a, const vector2d<T>& b, const vector2d<T>& c)
+vector<vector2d<T>> monotone_chain(vector<vector2d<T>> points)
 {
-    T result = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
-    return result > 0 ? 1 : (result < 0 ? -1 : 0);
+    size_t n = points.size(), k = 0;
+    if (n <= 3)
+        return points;
+
+    sort(points.begin(), points.end());
+
+    vector<vector2d<T>> out(n * 2);
+    for (size_t i = 0; i < n; ++i)
+    {
+        while (k >= 2 && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i];
+    }
+    for (size_t i = n - 1, t = k + 1; i > 0; --i)
+    {
+        while (k >= t && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i - 1] - out[k - 2]) <= 0)
+            --k;
+        out[k++] = points[i - 1];
+    }
+
+    out.resize(k - 1);
+    return out;
 }
 
 template <typename T>
-inline T sqr_magnitude(const vector2d<T>& v)
+pair<vector2d<T>, vector2d<T>> rotating_calipers(vector<vector2d<T>> points)
 {
-    return v.x * v.x + v.y * v.y;
-}
+    pair<vector2d<T>, vector2d<T>> out;
+    int n = points.size();
+    T magnitude_max = 0;
 
-template <typename T>
-vector<vector2d<T>> graham_scan(vector2d<T>* points, int size)
-{
-    int pivot = 0;
-    for (int i = 1; i < size; i++)
-        pivot = (points[i].x == points[pivot].x ? points[i].y < points[pivot].y : points[i].x < points[pivot].x) ? i : pivot;
-
-    std::swap(points[0], points[pivot]);
-    std::sort(points + 1, points + size, [=](const auto& a, const auto& b) -> bool
-        {
-            int orient = orientation(points[0], a, b);
-            if (orient != 0)
-                return orient < 0;
-            return (a - points[0]).sqr_magnitude() < (b - points[0]).sqr_magnitude();
-        });
-
-    vector<vector2d<T>> sortedPoints;
-    sortedPoints.push_back(points[0]);
-
-    for (int i = 1; i < size; i++)
+    for (int i = 0, j = 1; i < n; i++)
     {
-        if (i < size - 1)
+        int iNext = (i + 1) % n;
+        vector2d<T> iVector = points[iNext] - points[i];
+        do
         {
-            if (orientation(points[0], points[i], points[i + 1]) == 0)
-                continue;
+            int jNext = (j + 1) % n;
+            vector2d<T> jVector = points[jNext] - points[j];
+            if (vector2d<T>::cross(iVector, jVector) > 0)
+                j = jNext;
+            else
+                break;
+        } while (true);
+
+        T magnitude = (points[i] - points[j]).sqr_magnitude();
+        if (magnitude > magnitude_max)
+        {
+            out = make_pair(points[i], points[j]);
+            magnitude_max = magnitude;
         }
-        sortedPoints.push_back(points[i]);
     }
 
-    size = sortedPoints.size();
-
-    if (size > 2)
-    {
-        int first = 0, second = 0, next = 1;
-        stack<int> scan;
-        scan.push(0);
-
-        while (next < size)
-        {
-            first = second;
-            second = next++;
-            while (orientation(sortedPoints[first], sortedPoints[second], sortedPoints[next % size]) >= 0)
-            {
-                second = first;
-                scan.pop();
-                first = scan.top();
-            }
-            scan.push(second);
-        }
-
-        int length = scan.size();
-        vector<vector2d<T>> shellPoints{ length };
-
-        for (int i = 0; i < length; i++)
-        {
-            shellPoints[length - i - 1] = sortedPoints[scan.top()];
-            scan.pop();
-        }
-
-        return shellPoints;
-    }
-    return sortedPoints;
+    return out;
 }
