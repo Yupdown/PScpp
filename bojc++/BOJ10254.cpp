@@ -40,30 +40,86 @@ struct vector2d
 };
 
 template <typename T>
-vector<vector2d<T>> monotone_chain(vector<vector2d<T>> points)
+vector<vector2d<T>> divide_and_conquer_internal(const vector<vector2d<T>>& points, size_t from, size_t to)
 {
-    size_t n = points.size(), k = 0;
-    if (n <= 3)
-        return points;
-
-    sort(points.begin(), points.end());
-
-    vector<vector2d<T>> out(n * 2);
-    for (size_t i = 0; i < n; ++i)
+    if (to - from <= 3)
     {
-        while (k >= 2 && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i] - out[k - 2]) <= 0)
-            --k;
-        out[k++] = points[i];
-    }
-    for (size_t i = n - 1, t = k + 1; i > 0; --i)
-    {
-        while (k >= t && vector2d<T>::cross(out[k - 1] - out[k - 2], points[i - 1] - out[k - 2]) <= 0)
-            --k;
-        out[k++] = points[i - 1];
+        vector<vector2d<T>> out(points.begin() + from, points.begin() + to);
+        if (to - from == 3 && vector2d<T>::cross(out[2] - out[0], out[1] - out[0]) < 0)
+            swap(out[1], out[2]);
+        return out;
     }
 
-    out.resize(k - 1);
+    size_t mid = (from + to) / 2;
+    vector<vector2d<T>> hp = divide_and_conquer_internal(points, from, mid);
+    vector<vector2d<T>> hq = divide_and_conquer_internal(points, mid, to);
+
+    size_t np = hp.size();
+    size_t nq = hq.size();
+    size_t up = distance(hp.begin(), max_element(hp.begin(), hp.end()));
+    size_t uq = distance(hq.begin(), min_element(hq.begin(), hq.end()));
+    size_t lp = up;
+    size_t lq = uq;
+
+    bool flag = true;
+    while (flag)
+    {
+        flag = false;
+        while (vector2d<T>::cross(hq[uq] - hp[up], hq[(uq + 1) % nq] - hp[up]) > 0)
+        {
+            uq = (uq + 1) % nq;
+            flag = true;
+        }
+        while (vector2d<T>::cross(hp[up] - hq[uq], hp[(up + np - 1) % np] - hq[uq]) < 0)
+        {
+            up = (up + np - 1) % np;
+            flag = true;
+        }
+    }
+    flag = true;
+    while (flag)
+    {
+        flag = false;
+        while (vector2d<T>::cross(hq[lq] - hp[lp], hq[(lq + nq - 1) % nq] - hp[lp]) < 0)
+        {
+            lq = (lq + nq - 1) % nq;
+            flag = true;
+        }
+        while (vector2d<T>::cross(hp[lp] - hq[lq], hp[(lp + 1) % np] - hq[lq]) > 0)
+        {
+            lp = (lp + 1) % np;
+            flag = true;
+        }
+    }
+
+    vector<vector2d<T>> out;
+    if (up != lp)
+    {
+        for (size_t p = lp; p != up; p = (p + 1) % np)
+            out.emplace_back(hp[p]);
+        out.emplace_back(hp[up]);
+    }
+    else
+        out.emplace_back(*min_element(hp.begin(), hp.end()));
+    if (uq != lq)
+    {
+        for (size_t q = uq; q != lq; q = (q + 1) % nq)
+            out.emplace_back(hq[q]);
+        out.emplace_back(hq[lq]);
+    }
+    else
+        out.emplace_back(*max_element(hq.begin(), hq.end()));
     return out;
+}
+
+template <typename T>
+vector<vector2d<T>> divide_and_conquer(vector<vector2d<T>> points)
+{
+    size_t n = points.size();
+    if (n <= 2)
+        return points;
+    sort(points.begin(), points.end());
+    return divide_and_conquer_internal(points, 0, n);
 }
 
 template <typename T>
@@ -114,17 +170,25 @@ int main()
         for (int i = 0; i < n; i++)
             cin >> points[i].x >> points[i].y;
 
-        vector<vector2d<int64>> convexhull = monotone_chain(points);
-        int size = convexhull.size();
+        vector<vector2d<int64>> convexhull = divide_and_conquer(points);
+        vector<vector2d<int64>> convexhull_cpy;
+        size_t size = convexhull.size();
+        for (size_t i = size; i > 0; --i)
+        {
+            vector2d<int64> v1 = convexhull[i - 1] - convexhull[(i + size - 2) % size];
+            vector2d<int64> v2 = convexhull[i % size] - convexhull[i - 1];
+            if (vector2d<int64>::cross(v1, v2) == 0 && vector2d<int64>::dot(v1, v2) > 0)
+                continue;
+            convexhull_cpy.emplace_back(convexhull[i - 1]);
+        }
+        size = convexhull_cpy.size();
 
         pair<vector2d<int64>, vector2d<int64>> result;
         if (size > 2)
-            result = rotating_calipers(convexhull);
+            result = rotating_calipers(convexhull_cpy);
         else
-            result = make_pair(convexhull[0], convexhull[1]);
+            result = make_pair(convexhull_cpy[0], convexhull_cpy[1]);
 
         cout << result.first.x << ' ' << result.first.y << ' ' << result.second.x << ' ' << result.second.y << '\n';
     }
-
-    return 0;
 }
