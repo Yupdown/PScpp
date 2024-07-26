@@ -85,35 +85,23 @@ vector<vector2d<T>> divide_and_conquer_internal(const vector<vector2d<T>>& point
     size_t lp = up;
     size_t lq = uq;
 
-    bool flag = true;
-    while (flag)
+    while (true)
     {
-        flag = false;
-        while (vector2d<T>::cross(hq[uq] - hp[up], hq[(uq + 1) % nq] - hp[up]) > 0)
-        {
+        if (vector2d<T>::cross(hq[uq] - hp[up], hq[(uq + 1) % nq] - hp[up]) > 0)
             uq = (uq + 1) % nq;
-            flag = true;
-        }
-        while (vector2d<T>::cross(hp[up] - hq[uq], hp[(up + np - 1) % np] - hq[uq]) < 0)
-        {
+        else if (vector2d<T>::cross(hp[up] - hq[uq], hp[(up + np - 1) % np] - hq[uq]) < 0)
             up = (up + np - 1) % np;
-            flag = true;
-        }
+        else
+            break;
     }
-    flag = true;
-    while (flag)
+    while (true)
     {
-        flag = false;
-        while (vector2d<T>::cross(hq[lq] - hp[lp], hq[(lq + nq - 1) % nq] - hp[lp]) < 0)
-        {
+        if (vector2d<T>::cross(hq[lq] - hp[lp], hq[(lq + nq - 1) % nq] - hp[lp]) < 0)
             lq = (lq + nq - 1) % nq;
-            flag = true;
-        }
-        while (vector2d<T>::cross(hp[lp] - hq[lq], hp[(lp + 1) % np] - hq[lq]) > 0)
-        {
+        else if (vector2d<T>::cross(hp[lp] - hq[lq], hp[(lp + 1) % np] - hq[lq]) > 0)
             lp = (lp + 1) % np;
-            flag = true;
-        }
+        else
+            break;
     }
 
     vector<vector2d<T>> out;
