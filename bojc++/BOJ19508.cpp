@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
-#define PRECISION(n) cout<<fixed,cout.precision(n)
 
 using namespace std;
 
@@ -18,7 +17,7 @@ struct vector2d
 	vector2d(const vector2d<TR>& rhs) : x(static_cast<T>(rhs.x)), y(static_cast<T>(rhs.y)) {}
 
 	T sqr_magnitude() const { return x * x + y * y; }
-	T magnitude() const { return sqrt(sqr_magnitude()); }
+	double magnitude() const { return sqrt(sqr_magnitude()); }
 	static T dot(const vector2d& lhs, const vector2d& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y; }
 	static T cross(const vector2d& lhs, const vector2d& rhs) { return lhs.x * rhs.y - lhs.y * rhs.x; }
 
