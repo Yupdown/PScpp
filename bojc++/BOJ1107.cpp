@@ -2,33 +2,29 @@
 
 using namespace std;
 
+vector<int> b(10);
+
+int solution(int n, int d, int v)
+{
+	if (v >= max(n * 2, 100))
+		return INT_MAX;
+	int vmin = d ? abs(n - v) + d : INT_MAX;
+	for (int e : b)
+		vmin = min(vmin, !e && !d ? n + 1 : solution(n, d + 1, v * 10 + e));
+	return vmin;
+}
+
 int main()
 {
 	int n, m;
 	cin >> n >> m;
 
-	bool flags[10]{};
+	iota(b.begin(), b.end(), 0);
 	for (int i = 0; i < m; ++i)
 	{
 		int v;
 		cin >> v;
-		flags[v] = true;
+		b.erase(find(b.begin(), b.end(), v));
 	}
-
-	int dmin = abs(n - 100);
-	if (!flags[0])
-		dmin = min(dmin, n + 1);
-	for (int i = 1; i < max(n * 2, 100); ++i)
-	{
-		int d = 0;
-		for (int ip = i; ip > 0; ip /= 10, ++d)
-		{
-			if (flags[ip % 10])
-				goto escape;
-		}
-		dmin = min(dmin, abs(n - i) + d);
-	escape:;
-	}
-
-	cout << dmin;
+	cout << min(abs(n - 100), solution(n, 0, 0));
 }
