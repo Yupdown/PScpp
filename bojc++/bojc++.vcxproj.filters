@@ -1266,5 +1266,11 @@
     <ClCompile Include="BOJ13275.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ16163.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1229.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
