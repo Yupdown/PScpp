@@ -1,25 +1,24 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-
-vector<int> v;
 int memo[1000001];
 
 int main()
 {
 	int n;
 	cin >> n;
-	v.push_back(1);
-	memset(memo, 1, sizeof(memo));
-	for (int i = 1; v.back() <= n; ++i)
-		v.push_back(v.back() + i * 4 + 1);
-	memo[0] = 0;
-	for (int i = 0; i < n; ++i)
+	queue<int> q;
+	q.push(0);
+	while (!memo[n])
 	{
-		for (int vp : v)
+		int i = q.front();
+		q.pop();
+		for (int j = i + 1, k = 1; j <= n; j = j + k++ * 4 + 1)
 		{
-			if (i + vp <= n)
-				memo[i + vp] = min(memo[i + vp], memo[i] + 1);
+			if (memo[j])
+				continue;
+			memo[j] = memo[i] + 1;
+			q.push(j);
 		}
 	}
 	cout << memo[n];
