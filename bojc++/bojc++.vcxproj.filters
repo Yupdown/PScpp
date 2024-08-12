@@ -1257,5 +1257,8 @@
     <ClCompile Include="BOJ22944.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="TUK0052.cpp">
+      <Filter>Source Files\tukorea</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

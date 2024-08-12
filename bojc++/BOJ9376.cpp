@@ -1,57 +1,69 @@
 #include <bits/stdc++.h>
-#include <array>
 #define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
 
 using namespace std;
-
-char input[102][102];
+char table[102][103];
 int memo[3][102][102];
 
-void flood_room(int h, int w, int r, int c, int n)
+int solution(int n, int m)
 {
-	const int adj[][2] = { -1, 0, 1, 0, 0, -1, 0, 1 };
-
-	queue<array<int, 2>> bfs[2];
-	bfs[0].push(array<int, 2>{ r, c });
-	int m = 0;
-
-	while (!bfs[m % 2].empty())
+	memset(memo, 0, sizeof(memo));
+	queue<tuple<int, int, int>> q;
+	q.emplace(0, 0, 0);
+	for (int i = 0; i < n * m; ++i)
 	{
-		auto& cbfs = bfs[m % 2];
-		auto& nbfs = bfs[(m + 1) % 2];
-
-		while (!cbfs.empty())
+		if (table[i / m][i % m] == '$')
 		{
-			int r = cbfs.front()[0];
-			int c = cbfs.front()[1];
-			cbfs.pop();
+			memo [q.size()][i / m][i % m] = 1;
+			q.emplace(static_cast<int>(q.size()), i / m, i % m);
+		}
+	}
 
-			memo[n][r][c] = m;
+	int c = 0;
+	while (!q.empty())
+	{
+		c++;
+		vector<tuple<int, int, int>> qp;
+		while (!q.empty())
+		{
+			auto [k, i, j] = q.front();
+			q.pop();
 
-			for (int i = 0; i < 4; ++i)
+			for (int d = 0; d < 4; ++d)
 			{
-				int rp = r + adj[i][0];
-				int cp = c + adj[i][1];
+				int ip = i + "1102"[d] - '1';
+				int jp = j + "0211"[d] - '1';
 
-				if (rp < 0 || rp > h + 1 || cp < 0 || cp > w + 1)
+				if (ip < 0 || ip >= n || jp < 0 || jp >= m)
 					continue;
-				if (memo[n][rp][cp] >= 0)
+				if (table[ip][jp] == '*')
 					continue;
-				if (input[rp][cp] == '*')
+				if (memo[k][ip][jp] > 0)
 					continue;
-
-				memo[n][rp][cp] = 0;
-				if (input[rp][cp] == '#')
-				{
-					nbfs.push(array<int, 2>{ rp, cp });
-					continue;
-				}
-				cbfs.push(array<int, 2>{ rp, cp });
+				memo[k][ip][jp] = c;
+				if (table[ip][jp] == '#')
+					qp.emplace_back(k, ip, jp);
+				else
+					q.emplace(k, ip, jp);
 			}
 		}
 
-		m++;
+		for (const auto& p : qp)
+			q.emplace(p);
 	}
+
+	int cmin = INT_MAX;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (memo[0][i][j] == 0)
+				continue;
+			int sum = memo[0][i][j] + memo[1][i][j] + memo[2][i][j];
+			cmin = min(cmin, sum - (table[i][j] == '#' ? 2 : 3));
+		}
+	}
+	return cmin;
 }
 
 int main()
@@ -61,52 +73,15 @@ int main()
 	int t;
 	cin >> t;
 
-	while (t-- > 0)
+	while (t--)
 	{
-		int h, w;
-		cin >> h >> w;
+		int n, m;
+		cin >> n >> m;
 
-		memset(input, '.', sizeof(input));
-		memset(memo, -1, sizeof(memo));
+		memset(table, '.', sizeof(table));
+		for (int i = 0; i < n; ++i)
+			cin >> (table[i + 1] + 1);
 
-		for (int i = 1; i < h + 1; ++i)
-		{
-			cin >> (input[i] + 1);
-			input[i][w + 1] = '.';
-		}
-
-		int pc = 0;
-		flood_room(h, w, 0, 0, 0);
-		for (int r = 1; r < h + 1; ++r)
-		{
-			for (int c = 1; c < w + 1; ++c)
-			{
-				if (input[r][c] == '$')
-					flood_room(h, w, r, c, ++pc);
-			}
-		}
-
-		int minv = 65536;
-		for (int r = 1; r < h + 1; ++r)
-		{
-			for (int c = 1; c < w + 1; ++c)
-			{
-				if (memo[0][r][c] < 0 || memo[1][r][c] < 0 || memo[2][r][c] < 0 || input[r][c] == '*')
-					continue;
-
-				int v = memo[0][r][c] + memo[1][r][c] + memo[2][r][c];
-				switch (input[r][c])
-				{
-				case '#':
-					minv = min(minv, v - 2);
-					break;
-				default:
-					minv = min(minv, v);
-					break;
-				}
-			}
-		}
-
-		cout << minv << '\n';
+		cout << solution(n + 2, m + 2) << '\n';
 	}
 }
