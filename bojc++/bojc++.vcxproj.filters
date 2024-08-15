@@ -1350,5 +1350,32 @@
     <ClCompile Include="BOJ14789.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="breadth-first_search.cpp">
+      <Filter>Source Files\libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ15947.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ26517.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ20035.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ10529.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2275.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1757.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ2572.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ27314.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
