@@ -13,8 +13,10 @@ void dijkstra(int p)
 	result[p] = 0;
 	while (!pq.empty())
 	{
-		auto [_, n] = pq.top();
+		auto [w, n] = pq.top();
 		pq.pop();
+		if (-w > result[n])
+			continue;
 		for (auto& [np, wp] : edges[n])
 		{
 			int w = result[n] + wp;
