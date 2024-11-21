@@ -1581,5 +1581,11 @@
     <ClCompile Include="CF988-G.cpp">
       <Filter>Source Files\codeforces</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ9359.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ1441.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
