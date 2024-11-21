@@ -1545,6 +1545,12 @@
     <ClCompile Include="BOJ2487.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="CF976-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ31813.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
     <ClCompile Include="CF975-A.cpp">
       <Filter>Source Files\codeforces</Filter>
     </ClCompile>
