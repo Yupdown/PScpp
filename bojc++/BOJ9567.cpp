@@ -2,17 +2,11 @@
 #define FASTIO() cin.tie(0),cout.tie(0),ios::sync_with_stdio(0)
 
 using namespace std;
-int table[3000000];
-
-int insert(int n, int i)
-{
-	return table[i] = table[i] < 0 ? (i + 1) % n : insert(n, table[i]);
-}
+int memo[3000001];
 
 int main()
 {
 	FASTIO();
-	memset(table, -1, sizeof(table));
 
 	int n, k;
 	cin >> n >> k;
@@ -21,13 +15,16 @@ int main()
 		int x, y, a, b;
 		cin >> x >> y >> a >> b;
 		for (int i = 1; i <= y; ++i)
-		{
-			for (int j = 0; j < x; ++j)
-				insert(n, (static_cast<long long>(a) * i + b) % n);
-		}
+			memo[(static_cast<long long>(a) * i + b) % n] += x;
+	}
+	for (int i = 0; i < n; ++i)
+	{
+		memo[i + 1] += max(memo[i] - 1, 0);
+		memo[i] = min(memo[i], 1);
 	}
 	int r = 0;
-	while (table[r] >= 0)
-		r = table[r];
+	k = memo[n];
+	while (k > 0 || memo[r])
+		k -= 1 - memo[r++];
 	cout << r;
 }
