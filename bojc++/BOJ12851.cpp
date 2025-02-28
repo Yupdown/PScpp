@@ -1,71 +1,38 @@
-//#include <bits/stdc++.h>
-//#define SIZEOF_ARRAY(a) (sizeof(a) / sizeof(*(a)))
-//
-//using namespace std;
-//
-//int flood[100001];
-//
-//int main()
-//{
-//	queue<int> q;
-//	int n, k;
-//	cin >> n >> k;
-//
-//	q.push(n);
-//	flood[n] = 1;
-//
-//	int c = 0;
-//	bool flag = n != k;
-//	while (flag) {
-//		int l = q.size();
-//		while (l-- > 0) {
-//			int x = q.front();
-//			q.pop();
-//			int next[]{ x - 1, x + 1, x * 2 };
-//			for (int i = 0; i < SIZEOF_ARRAY(next); ++i) {
-//				if (next[i] < 0 || next[i] > 100000)
-//					continue;
-//				if (next[i] == k)
-//					flag = false;
-//				if (!flood[next[i]])
-//					q.push(next[i]);
-//				flood[next[i]] += flood[x];
-//			}
-//		}
-//		++c;
-//	}
-//
-//	cout << c << "\n" << flood[k];
-//}
-
 #include <bits/stdc++.h>
 
 using namespace std;
-
-vector<int> next_node[1000];
-stack<int> st;
+int memo[2][1 << 18];
 
 int main()
 {
-	int n;
-	cin >> n;
+	int n, k;
+	cin >> n >> k;
 
-	for (int i = 0; i < n - 1; ++i)
+	queue<int> q;
+	q.push(n);
+	memo[0][n] = 1;
+	memo[1][n] = 1;
+
+	while (!q.empty())
 	{
-		int a, b;
-		cin >> a >> b;
-		next_node[a - 1].push_back(b - 1);
+		int i = q.front();
+		q.pop();
+
+		for (int j : { i + 1, i - 1, i * 2 })
+		{
+			if (j < 0 || j > 1 << 18)
+				continue;
+			if (memo[0][j] > 0 && memo[0][j] < memo[0][i] + 1)
+				continue;
+			if (memo[0][j] == memo[0][i] + 1)
+			{
+				memo[1][j] += memo[1][i];
+				continue;
+			}
+			memo[0][j] = memo[0][i] + 1;
+			memo[1][j] = memo[1][i];
+			q.push(j);
+		}
 	}
-
-	st.push(0);
-	while (!st.empty())
-	{
-		int v = st.top();
-		st.pop();
-
-		for (auto iter = next_node[v].rbegin(); iter != next_node[v].rend(); ++iter)
-			st.push(*iter);
-
-		cout << v + 1 << endl; // operation per each node
-	}
+	cout << memo[0][k] - 1 << "\n" << memo[1][k];
 }

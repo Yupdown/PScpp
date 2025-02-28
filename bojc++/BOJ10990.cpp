@@ -3,21 +3,19 @@
 
 using namespace std;
 
-int h[200];
-int l[200];
-
 int main()
 {
 	FASTIO();
 
-	int n, m, k;
-	cin >> n >> m >> k;
+	int n;
+	cin >> n;
+
 	for (int i = 0; i < n; ++i)
 	{
-		int v;
-		cin >> v;
-		++h[v];
+		for (int j = 0; j < n + i; ++j)
+			cout << (!(abs(j - n + 1) - i) ? '*' : ' ');
+		cout << '\n';
 	}
-	for (int i = 0; i < m; ++i)
-		cin >> l[i];
+
+	return 0;
 }
