@@ -2691,6 +2691,27 @@
     <ClCompile Include="BOJ20327.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="CF1009-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1009-F.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1009-B.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1009-C.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1009-D.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1009-G.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="BOJ5875.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BOJ11729.cpp">
