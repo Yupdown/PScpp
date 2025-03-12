@@ -8,7 +8,7 @@ long long memo[400][400];
 
 long long solution(int n, int i, int j)
 {
-	if (i == j || j + 1 == i)
+	if (i == j || (j + 1) % n == i)
 		return memo[i][j] = 0;
 	if (memo[i][j] >= 0)
 		return memo[i][j];
