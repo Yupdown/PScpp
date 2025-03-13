@@ -26,8 +26,26 @@ double size_segment(int n, int li, int ri)
 	return li <= ri ? spsum[ri] - spsum[li] - tr : spsum[ri] + spsum[n] - spsum[li] + tr;
 }
 
-double get_size_difference(int n, int i, int j, double ti, double tj)
+tuple<int, double, int, double> get_ij(int n, double di, double dj)
 {
+	int i = 0;
+	int j = 0;
+	for (int dx = 1 << 17; dx > 0; dx >>= 1)
+	{
+		if (i + dx < n && dpsum[i + dx] < di)
+			i += dx;
+		if (j + dx < n && dpsum[j + dx] < dj)
+			j += dx;
+	}
+	double ti = (di - dpsum[i]) / (dpsum[i + 1] - dpsum[i]);
+	double tj = (dj - dpsum[j]) / (dpsum[j + 1] - dpsum[j]);
+
+	return make_tuple(i, ti, j, tj);
+}
+
+double get_size_difference(int n, double di, double dj)
+{
+	auto [i, ti, j, tj] = get_ij(n, di, dj);
 	int ip = (i + 1) % n;
 	int jp = (j + 1) % n;
 	double si = size_segment(n, ip, j);
@@ -58,48 +76,29 @@ int main()
 		spsum[i + 1] = spsum[i] + get_size(xi[0], yi[0], xi[i], yi[i], xi[(i + 1) % n], yi[(i + 1) % n]);
 	}
 
-	int i = 0;
-	int j = 0;
-	for (double di = 0, ls; di < dpsum[n]; di += 1)
+	double dl = 0;
+	double dr = dpsum[n] * 0.5;
+	double cz = get_size_difference(n, dl, dr);
+	for (int k = 0; k < 100; ++k)
 	{
-		if (di >= dpsum[i + 1])
-			di = dpsum[++i];
-		double dj = di + dpsum[n] * 0.5;
-		while (j < n && dj >= dpsum[j + 1])
-			++j;
-		j %= n;
+		double dm = (dl + dr) * 0.5;
+		double di = dm;
+		double dj = dm + dpsum[n] * 0.5;
 		if (dj >= dpsum[n])
 			dj -= dpsum[n];
-		double ti = (di - dpsum[i]) / (dpsum[i + 1] - dpsum[i]);
-		double tj = (dj - dpsum[j]) / (dpsum[j + 1] - dpsum[j]);
-		double cs = get_size_difference(n, i, j, ti, tj);
-		if (di > 0 && cs * ls <= 0)
-		{
-			int li, lj;
-			double tl = 0, tr = -1, lti, ltj;
-			for (int k = 0; k < 100; ++k)
-			{
-				double tm = (tl + tr) * 0.5;
-				double ldi = di + tm;
-				double ldj = dj + tm;
-				li = ldi < dpsum[i] ? (i + n - 1) % n : i;
-				lj = ldj < dpsum[j] ? (j + n - 1) % n : j;
-				lti = (ldi - dpsum[li]) / (dpsum[li + 1] - dpsum[li]);
-				ltj = (ldj - dpsum[lj]) / (dpsum[lj + 1] - dpsum[lj]);
-
-				if (get_size_difference(n, li, lj, lti, ltj) * cs > 0.0)
-					tl = tm;
-				else
-					tr = tm;
-			}
-
-			cout << "YES\n";
-			cout << li + 1 << " " << lti << "\n";
-			cout << lj + 1 << " " << ltj << "\n";
-			return 0;
-		}
-		ls = cs;
+		double cs = get_size_difference(n, di, dj);
+		if (cs * cz > 0.0)
+			dl = dm;
+		else
+			dr = dm;
 	}
 
-	cout << "NO\n";
+	cout << "YES\n";
+	double di = dl;
+	double dj = dl + dpsum[n] * 0.5;
+	if (dj >= dpsum[n])
+		dj -= dpsum[n];
+	auto [i, ti, j, tj] = get_ij(n, di, dj);
+	cout << i + 1 << " " << ti << "\n";
+	cout << j + 1 << " " << tj << "\n";
 }
