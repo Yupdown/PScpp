@@ -15,15 +15,31 @@ double lerp(double a, double b, double t)
 	return a + (b - a) * t;
 }
 
-double get_size(double ax, double ay, double bx, double by, double cx, double cy)
+double triangle_size(double ax, double ay, double bx, double by, double cx, double cy)
 {
 	return abs((by - ay) * (cx - bx) - (bx - ax) * (cy - by));
 }
 
-double size_segment(int n, int li, int ri)
+double size_segment(int n, int i, double ti, int j, double tj)
 {
-	double tr = get_size(xi[0], yi[0], xi[li], yi[li], xi[ri], yi[ri]);
-	return li <= ri ? spsum[ri] - spsum[li] - tr : spsum[ri] + spsum[n] - spsum[li] + tr;
+	int i0 = i;
+	int j0 = j;
+	if (i > j)
+	{
+		swap(i0, j0);
+		swap(ti, tj);
+	}
+	int i1 = (i0 + 1) % n;
+	int j1 = (j0 + 1) % n;
+	double s = spsum[j0] - spsum[i1];
+	double ix = lerp(xi[i0], xi[i1], ti);
+	double iy = lerp(yi[i0], yi[i1], ti);
+	double jx = lerp(xi[j0], xi[j1], tj);
+	double jy = lerp(yi[j0], yi[j1], tj);
+	s += triangle_size(xi[0], yi[0], ix, iy, xi[i1], yi[i1]);
+	s += triangle_size(xi[0], yi[0], xi[j0], yi[j0], jx, jy);
+	s -= triangle_size(xi[0], yi[0], ix, iy, jx, jy);
+	return i > j ? s : spsum[n] - s;
 }
 
 tuple<int, double, int, double> get_ij(int n, double di, double dj)
@@ -43,22 +59,6 @@ tuple<int, double, int, double> get_ij(int n, double di, double dj)
 	return make_tuple(i, ti, j, tj);
 }
 
-double get_size_difference(int n, double di, double dj)
-{
-	auto [i, ti, j, tj] = get_ij(n, di, dj);
-	int ip = (i + 1) % n;
-	int jp = (j + 1) % n;
-	double si = size_segment(n, ip, j);
-	double sj = size_segment(n, jp, i);
-	double dxi = lerp(xi[i], xi[ip], ti);
-	double dyi = lerp(yi[i], yi[ip], ti);
-	double dxj = lerp(xi[j], xi[jp], tj);
-	double dyj = lerp(yi[j], yi[jp], tj);
-	si += get_size(dxi, dyi, xi[ip], yi[ip], xi[j], yi[j]) + get_size(dxi, dyi, dxj, dyj, xi[j], yi[j]);
-	sj += get_size(dxj, dyj, xi[jp], yi[jp], xi[i], yi[i]) + get_size(dxi, dyi, dxj, dyj, xi[i], yi[i]);
-	return si - sj;
-}
-
 int main()
 {
 	FASTIO();
@@ -73,12 +73,13 @@ int main()
 		int64 dx = xi[(i + 1) % n] - xi[i];
 		int64 dy = yi[(i + 1) % n] - yi[i];
 		dpsum[i + 1] = dpsum[i] + sqrt(dx * dx + dy * dy);
-		spsum[i + 1] = spsum[i] + get_size(xi[0], yi[0], xi[i], yi[i], xi[(i + 1) % n], yi[(i + 1) % n]);
+		spsum[i + 1] = spsum[i] + triangle_size(xi[0], yi[0], xi[i], yi[i], xi[(i + 1) % n], yi[(i + 1) % n]);
 	}
 
 	double dl = 0;
 	double dr = dpsum[n] * 0.5;
-	double cz = get_size_difference(n, dl, dr);
+	auto [i, ti, j, tj] = get_ij(n, dl, dr);
+	double cz = size_segment(n, i, ti, j, tj) - spsum[n] * 0.5;
 	for (int k = 0; k < 100; ++k)
 	{
 		double dm = (dl + dr) * 0.5;
@@ -86,7 +87,8 @@ int main()
 		double dj = dm + dpsum[n] * 0.5;
 		if (dj >= dpsum[n])
 			dj -= dpsum[n];
-		double cs = get_size_difference(n, di, dj);
+		tie(i, ti, j, tj) = get_ij(n, di, dj);
+		double cs = size_segment(n, i, ti, j, tj) - spsum[n] * 0.5;
 		if (cs * cz > 0.0)
 			dl = dm;
 		else
@@ -94,11 +96,6 @@ int main()
 	}
 
 	cout << "YES\n";
-	double di = dl;
-	double dj = dl + dpsum[n] * 0.5;
-	if (dj >= dpsum[n])
-		dj -= dpsum[n];
-	auto [i, ti, j, tj] = get_ij(n, di, dj);
 	cout << i + 1 << " " << ti << "\n";
 	cout << j + 1 << " " << tj << "\n";
 }

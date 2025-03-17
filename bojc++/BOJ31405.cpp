@@ -12,7 +12,7 @@ double cross_product(double ax, double ay, double bx, double by)
 	return ax * by - bx * ay;
 }
 
-double get_size(double ax, double ay, double bx, double by, double cx, double cy)
+double triangle_size(double ax, double ay, double bx, double by, double cx, double cy)
 {
 	return abs(cross_product(bx - ax, by - ay, cx - ax, cy - ay));
 }
@@ -32,7 +32,7 @@ int main()
 	cout << 1 << ' ' << 0.0 << endl;
 
 	for (int i = 1; i < n; ++i)
-		sum[i] = sum[i - 1] + get_size(xy[0].first, xy[0].second, xy[i - 1].first, xy[i - 1].second, xy[i].first, xy[i].second);
+		sum[i] = sum[i - 1] + triangle_size(xy[0].first, xy[0].second, xy[i - 1].first, xy[i - 1].second, xy[i].first, xy[i].second);
 
 	double whole_sum = sum[n - 1];
 
@@ -54,7 +54,7 @@ int main()
 		double xp = xy[target - 1].first + (xy[target].first - xy[target - 1].first) * tm;
 		double yp = xy[target - 1].second + (xy[target].second - xy[target - 1].second) * tm;
 
-		double s = get_size(xy[0].first, xy[0].second, xy[target - 1].first, xy[target - 1].second, xp, yp);
+		double s = triangle_size(xy[0].first, xy[0].second, xy[target - 1].first, xy[target - 1].second, xp, yp);
 
 		if (sum[target - 1] + s < whole_sum / 2)
 			tf = tm;
