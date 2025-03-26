@@ -39,11 +39,12 @@ struct vector2d
 template <typename T>
 vector<vector2d<T>> monotone_chain(vector<vector2d<T>> points)
 {
-    size_t n = points.size(), k = 0;
-    if (n <= 3)
-        return points;
-
     sort(points.begin(), points.end());
+    points.erase(unique(points.begin(), points.end()), points.end());
+
+    size_t n = points.size(), k = 0;
+    if (n < 3)
+        return points;
 
     vector<vector2d<T>> out(n * 2);
     for (size_t i = 0; i < n; ++i)
