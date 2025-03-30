@@ -87,25 +87,19 @@ int main()
     {
         double ret = 1e+9;
         n = hull_points.size();
-        for (int i = 0, j = 0, k = 0; i < n; ++i)
+        for (int i = 0, j = 0, k = 0, l = 0; i < n; ++i)
         {
             vector2di iv = hull_points[(i + 1) % n] - hull_points[i];
             while (vector2di::dot(iv, hull_points[(j + 1) % n] - hull_points[j]) >= 0)
                 j = (j + 1) % n;
             while (vector2di::cross(iv, hull_points[(k + 1) % n] - hull_points[k]) >= 0)
-                k = (k + 1) % n;
-            int m = i > k ? i - k : i + n - k;
-            int x = 0;
-            for (int dx = 1 << 16; dx > 0; dx >>= 1)
             {
-                int xp = x + dx;
-                if (xp > m)
-                    continue;
-                int l = (i + n - xp) % n;
-                if (vector2di::dot(iv, hull_points[(l + 1) % n] - hull_points[l]) > 0)
-                    x += dx;
+                if (l == k)
+                    l = (l + 1) % n;
+                k = (k + 1) % n;
             }
-            int l = (i + n - x) % n;
+            while (vector2di::dot(iv, hull_points[(l + 1) % n] - hull_points[l]) <= 0)
+                l = (l + 1) % n;
             ret = min(ret, (vector2di::cross(iv, hull_points[k] - hull_points[i]) + vector2di::cross(vector2di(-iv.y, iv.x), hull_points[l] - hull_points[j])) / iv.magnitude());
         }
         cout << ret * 2;
