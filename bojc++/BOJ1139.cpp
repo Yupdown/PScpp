@@ -21,14 +21,12 @@ double Function(int bitmask)
 	if (memo[bitmask] > 0)
 		return memo[bitmask];
 
-	double result = 0.0;
-	for (int i = 0; i < triangle.size(); ++i)
+	double result = 0;
+	for (const auto& [size, bitadd] : triangle)
 	{
-		pair<double, int> next = triangle[i];
-		if (next.second & bitmask)
+		if (bitadd & bitmask)
 			continue;
-
-		result = max(result, Function(bitmask | next.second) + next.first);
+		result = max(result, Function(bitmask | bitadd) + size);
 	}
 
 	return memo[bitmask] = result;
@@ -45,22 +43,16 @@ int main()
 	for (int i = 0; i < n; ++i)
 		cin >> edge[i];
 
-	int idx[3];
-	for (idx[0] = 0; idx[0] < n; ++idx[0])
+	for (int i = 0; i < n; ++i)
 	{
-		for (idx[1] = idx[0] + 1; idx[1] < n; ++idx[1])
+		for (int j = i + 1; j < n; ++j)
 		{
-			for (idx[2] = idx[1] + 1; idx[2] < n; ++idx[2])
+			for (int k = j + 1; k < n; ++k)
 			{
-				double size = SizeOfTriangle(edge[idx[0]], edge[idx[1]], edge[idx[2]]);
+				double size = SizeOfTriangle(edge[i], edge[j], edge[k]);
 				if (size < 0)
 					continue;
-
-				int bitmask = 0;
-				for (int i = 0; i < 3; ++i)
-					bitmask |= 1 << idx[i];
-
-				triangle.push_back(make_pair(size, bitmask));
+				triangle.emplace_back(size, 1 << i | 1 << j | 1 << k);
 			}
 		}
 	}
