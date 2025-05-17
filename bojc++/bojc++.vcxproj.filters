@@ -25,6 +25,9 @@
     <Filter Include="Source Files\tukorea">
       <UniqueIdentifier>{7fd11dac-df67-4db7-ab73-e8a4d4e5acd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\scsc">
+      <UniqueIdentifier>{a7a3dca3-ebda-43b7-9b0c-a8af862804e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="convex_hull.cpp">
@@ -2801,6 +2804,36 @@
     </ClCompile>
     <ClCompile Include="BOJ10158.cpp">
       <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-A.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-E.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-B.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-C.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-D.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-F.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-G.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-H.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-I.cpp">
+      <Filter>Source Files\scsc</Filter>
+    </ClCompile>
+    <ClCompile Include="SCSC2025-J.cpp">
+      <Filter>Source Files\scsc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
