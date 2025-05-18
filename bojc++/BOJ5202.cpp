@@ -4,28 +4,6 @@
 #define PRECISION(n) cout<<fixed,cout.precision(n)
 
 using namespace std;
-constexpr int SAMPLES = 1024;
-
-double get_overlap(double r, double x, double y)
-{
-	if (x >= r)
-	{
-		if (y >= r)
-			return r * r * M_PI * 0.5;
-		double t = asin(y / r);
-		return t * r * r + y * r * cos(t);
-	}
-
-	double t = acos(x / r);
-	if (y >= r)
-		return x * r * sin(t) + (M_PI - t * 2) * r * r / 2;
-
-	double tp = acos(y / r);
-	if (t + tp >= M_PI * 0.5)
-		return x * y * 2;
-
-	return x * r * sin(t) + y * r * sin(tp) + (M_PI - (t + tp) * 2) * r * r / 2;
-}
 
 int main()
 {
@@ -40,18 +18,14 @@ int main()
 		double w, h, r, d, a1, a2;
 		cin >> w >> h >> r >> d >> a1 >> a2;
 
+		double lhs = d / tan(a2 * M_PI / 180);
+		double rhs = d / tan(a1 * M_PI / 180);
+		double dx = w / 2 < r ? sqrt(r * r - w * w / 4) : 0;
+		double x1 = rhs - d;
+		double x2 = rhs - dx;
+		double x3 = lhs + dx; 
+		double x4 = lhs + d;
 		double ret = 0;
-		for (int c = 0; c < SAMPLES; ++c)
-		{
-			double t = tan((a1 + (a2 - a1) * (c / static_cast<double>(SAMPLES - 1))) * M_PI / 180);
-			double dist = d / t;
-			double sp = 0;
-			sp += get_overlap(r, w * 0.5, max(0.0, h * 0.5 - dist));
-			sp -= get_overlap(r, w * 0.5, max(0.0, -h * 0.5 - dist));
-			sp += get_overlap(r, w * 0.5, max(0.0, h * 0.5 + dist));
-			sp -= get_overlap(r, w * 0.5, max(0.0, -h * 0.5 + dist));
-			ret += 1 - sp / (w * h);
-		}
-		cout << "Data Set " << i + 1 << ":\n" << ret * 100 / SAMPLES << "%\n";
+		cout << "Data Set " << i + 1 << ":\n" << ret << "%\n";
 	}
 }
