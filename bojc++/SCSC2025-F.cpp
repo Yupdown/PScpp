@@ -6,7 +6,7 @@ using ll = long long;
 
 int table[2000][2000];
 pair<int, int> query[2000];
-pair<int, int> memo[2000];
+tuple<pair<int, int>, int, int> memo[2000];
 constexpr ll MOD = 998'244'353;
 
 int main()
@@ -19,49 +19,43 @@ int main()
 		cin >> table[i / n][i % n];
 	for (int i = 0; i < q; ++i)
 		cin >> query[i].first >> query[i].second;
-	
-	vector<int> temp(n);
 
-	int v = -1;
+	for (int i = 0; i < n; ++i)
+		memo[i] = make_tuple(make_pair(0, 0), i, i);
+
 	for (int i = 0; i < q; ++i)
 	{
+		sort(memo, memo + n, [](const auto& lhs, const auto& rhs) { return get<2>(lhs) < get<2>(rhs); });
+		// If the sort is not stable
 		if (query[i].first == 1)
-			v = i;
-	}
-
-	if (v < 0)
-		cout << 1;
-	else
-	{
-		for (int i = q - 1; i >= v; --i)
 		{
 			for (int j = 0; j < n; ++j)
-				memo[j] = make_pair(table[j][query[i].second - 1], temp[j]);
-			sort(memo, memo + n);
-			temp[0] = 0;
-			for (int j = 1; j < n; ++j)
-				temp[j] = temp[j - 1] + (memo[j - 1] != memo[j]);
+				get<0>(memo[j]) = make_pair(table[j][query[i].second - 1], 0);
 		}
-		for (int j = 0; j < n; ++j)
-			memo[j] = make_pair(table[j][query[v].second - 1], temp[j]);
-		sort(memo, memo + n);
-		temp[0] = 0;
-		for (int j = 1; j < n; ++j)
-			temp[j] = temp[j - 1] + (memo[j - 1] != memo[j]);
-
-		ll ret = 1, addv = 1;
-		for (int i = 1, c = 1; i < n; ++i)
+		// If the sort is stable
+		else
 		{
-			if (temp[i - 1] == temp[i])
-				addv = (addv * ++c) % MOD;
-			else
-			{
-				ret = (ret * addv) % MOD;
-				addv = 1;
-				c = 1;
-			}
+			for (int j = 0; j < n; ++j)
+				get<0>(memo[j]) = make_pair(table[j][query[i].second - 1], get<1>(memo[j]));
 		}
-		ret = (ret * addv) % MOD;
-		cout << ret;
+		sort(memo, memo + n, [](const auto& lhs, const auto& rhs) { return get<0>(lhs) < get<0>(rhs); });
+		get<1>(memo[0]) = 0;
+		for (int j = 1; j < n; ++j)
+			get<1>(memo[j]) = get<1>(memo[j - 1]) + (get<0>(memo[j - 1]) < get<0>(memo[j]));
 	}
+
+	ll ret = 1, addv = 1;
+	for (int i = 1, c = 1; i < n; ++i)
+	{
+		if (get<1>(memo[i - 1]) == get<1>(memo[i]))
+			addv = (addv * ++c) % MOD;
+		else
+		{
+			ret = (ret * addv) % MOD;
+			addv = 1;
+			c = 1;
+		}
+	}
+	ret = (ret * addv) % MOD;
+	cout << ret;
 }
