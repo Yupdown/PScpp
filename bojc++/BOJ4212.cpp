@@ -101,7 +101,11 @@ struct plane
 plane planes[25];
 
 vector<vector<pair<int, double>>> graph;
-vector<vector<pair<int, vector3df>>> points;
+// global position of the points
+vector<vector3df> points;
+// local position of the points from each plane
+vector<vector<pair<int, vector3df>>> plane_points;
+int adj_table[1000][1000];
 
 // get an arc length of euclidean distance of two points (assuming the both points are on the surface of the sphere)
 inline double get_arclen(double dist)
@@ -111,13 +115,18 @@ inline double get_arclen(double dist)
 
 void generate_graph(int n, int r)
 {
+	memset(adj_table, 0, sizeof(adj_table));
 	double rp = 6370 * sin(static_cast<double>(r) / 6370);
 
 	graph.clear();
 	points.clear();
+	plane_points.clear();
 	graph.resize(n);
 	points.resize(n);
+	plane_points.resize(n);
 
+	for (int i = 0; i < n; ++i)
+		points[i] = planes[i].vz * 6370;
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = i + 1; j < n; ++j)
@@ -133,60 +142,157 @@ void generate_graph(int n, int r)
 			vector3df ppproj = vector3df(vector3df::dot(planes[i].vx, pp), vector3df::dot(planes[i].vy, pp), vector3df::dot(planes[i].vz, pp));
 			vector3df nvproj = vector3df(vector3df::dot(planes[i].vx, planes[j].vz), vector3df::dot(planes[i].vy, planes[j].vz), 0).normalized();
 			double dist = vector3df::dot(ppproj, nvproj);
+
+			// if the circles are too far to make a connection, skip the procedure
 			if (dist > rp)
 				continue;
+			// make a line segment of the intersection and connect the rest of the points
 			else if (dist >= -rp)
 			{
 				graph.emplace_back();
 				graph.emplace_back();
+
 				int k = graph.size() - 2;
 				int l = graph.size() - 1;
 
-				graph[i].emplace_back(k, r);
-				graph[k].emplace_back(i, r);
-				graph[i].emplace_back(l, r);
-				graph[l].emplace_back(i, r);
-				graph[j].emplace_back(k, r);
-				graph[k].emplace_back(j, r);
-				graph[j].emplace_back(l, r);
-				graph[l].emplace_back(j, r);
-
 				double dp = sqrt(rp * rp - dist * dist);
-				graph[k].emplace_back(l, get_arclen(dp * 2));
-				graph[l].emplace_back(k, get_arclen(dp * 2));
-
+				// left side of the segment (k)
 				vector3df pa = nvproj * dist + vector3df(-nvproj.y, nvproj.x, 0) * dp;
+				// right side of the segment (l)
 				vector3df pb = nvproj * dist + vector3df(nvproj.y, -nvproj.x, 0) * dp;
 
-				for (const auto& [m, p] : points[i])
-				{
-					graph[k].emplace_back(m, get_arclen((pa - p).magnitude()));
-					graph[l].emplace_back(m, get_arclen((pb - p).magnitude()));
-					graph[m].emplace_back(k, get_arclen((pa - p).magnitude()));
-					graph[m].emplace_back(l, get_arclen((pb - p).magnitude()));
-				}
-				points[i].emplace_back(k, pa);
-				points[i].emplace_back(l, pb);
+				// add points on A circle
+				plane_points[i].emplace_back(k, pa);
+				plane_points[i].emplace_back(l, pb);
 
-				pa = (planes[i].vx * pa.x + planes[i].vy * pa.y) + planes[i].p - planes[j].p;
-				pb = (planes[i].vx * pb.x + planes[i].vy * pb.y) + planes[i].p - planes[j].p;
+				// perform projection for pa, pb over B plane
+				pa = (planes[i].vx * pa.x + planes[i].vy * pa.y) + planes[i].p;
+				pb = (planes[i].vx * pb.x + planes[i].vy * pb.y) + planes[i].p;
+
+				points.emplace_back(pa);
+				points.emplace_back(pb);
+
+				pa = pa - planes[j].p;
+				pb = pb - planes[j].p;
+
 				pa = vector3df(vector3df::dot(planes[j].vx, pa), vector3df::dot(planes[j].vy, pa), 0);
 				pb = vector3df(vector3df::dot(planes[j].vx, pb), vector3df::dot(planes[j].vy, pb), 0);
 
-				for (const auto& [m, p] : points[j])
-				{
-					graph[k].emplace_back(m, get_arclen((pa - p).magnitude()));
-					graph[l].emplace_back(m, get_arclen((pb - p).magnitude()));
-					graph[m].emplace_back(k, get_arclen((pa - p).magnitude()));
-					graph[m].emplace_back(l, get_arclen((pb - p).magnitude()));
-				}
-				points[j].emplace_back(k, pa);
-				points[j].emplace_back(l, pb);
+				// add points on B circle
+				plane_points[j].emplace_back(k, pa);
+				plane_points[j].emplace_back(l, pb);
 			}
 
-			double delta = get_arclen((planes[i].vz - planes[j].vz).magnitude() * 6370);
-			graph[i].emplace_back(j, delta);
-			graph[j].emplace_back(i, delta);
+			// connecting two center of the circles
+			adj_table[i][j]++;
+			adj_table[j][i]++;
+		}
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		int pn = plane_points[i].size();
+		for (int j = 0; j < pn; ++j)
+		{
+			for (int k = j + 1; k < pn; ++k)
+			{
+				const auto& [ai, ap] = plane_points[i][j];
+				const auto& [bi, bp] = plane_points[i][k];
+				if (vector3df::cross(bp - ap, -ap).z > 0)
+				{
+					adj_table[ai][bi]++;
+					adj_table[bi][i]++;
+					adj_table[i][ai]++;
+				}
+				else
+				{
+					adj_table[bi][ai]++;
+					adj_table[i][bi]++;
+					adj_table[ai][i]++;
+				}
+
+				for (int l = k + 1; l < pn; ++l)
+				{
+					const auto& [ci, cp] = plane_points[i][l];
+					if (vector3df::cross(bp - ap, cp - ap).z > 0)
+					{
+						adj_table[ai][bi]++;
+						adj_table[bi][ci]++;
+						adj_table[ci][ai]++;
+					}
+					else
+					{
+						adj_table[bi][ai]++;
+						adj_table[ci][bi]++;
+						adj_table[ai][ci]++;
+					}
+				}
+			}
+		}
+	}
+
+	int pn = graph.size();
+	vector<pair<int, int>> sweeper;
+	vector<pair<int, int>> sweeper_point;
+	sweeper_point.resize(pn, make_pair(-1, -1));
+	for (int i = 0; i < pn; ++i)
+	{
+		for (int j = i + 1; j < pn; ++j)
+		{
+			if (adj_table[i][j] * adj_table[j][i] == 0 && adj_table[i][j] + adj_table[j][i] != 0)
+			{
+				if (adj_table[i][j] > 0)
+				{
+					sweeper.emplace_back(i, j);
+					sweeper_point[i].second = j;
+					sweeper_point[j].first = i;
+				}
+				else
+				{
+					sweeper.emplace_back(j, i);
+					sweeper_point[i].first = j;
+					sweeper_point[j].second = i;
+				}
+			}
+		}
+	}
+	if (pn == n)
+		return;
+	for (int i = 0; i < pn; ++i)
+	{
+		for (int j = i + 1; j < pn; ++j)
+		{
+			// the graph is not connected yet and needed to check if it's able to connect
+			if (adj_table[i][j] + adj_table[j][i] == 0)
+			{
+				bool flag = false;
+				for (const auto& [k, l] : sweeper)
+				{
+					if (vector3df::dot(points[i] + points[j], points[k] + points[l]) < EPS)
+						continue;
+					if (sweeper_point[i].first != -1)
+					{
+						vector3df nlhs = (points[sweeper_point[i].second] - points[i]).normalized();
+						vector3df nrhs = (points[sweeper_point[i].first] - points[i]).normalized();
+						if (vector3df::dot(nlhs + nrhs, points[j] - points[i]))
+					}
+					vector3df nlhs = vector3df::cross(points[i], points[j]).normalized();
+					vector3df nrhs = vector3df::cross(points[k], points[l]).normalized();
+					bool f0 = vector3df::dot(nlhs, points[k]) * vector3df::dot(nlhs, points[l]) < -EPS;
+					bool f1 = vector3df::dot(nrhs, points[i]) * vector3df::dot(nrhs, points[j]) < -EPS;
+					if (f0 && f1)
+					{
+						flag = true;
+						break;
+					}
+				}
+				if (flag)
+					continue;
+			}
+
+			double dist = get_arclen((points[i] - points[j]).magnitude());
+			graph[i].emplace_back(j, dist);
+			graph[j].emplace_back(i, dist);
 		}
 	}
 }
