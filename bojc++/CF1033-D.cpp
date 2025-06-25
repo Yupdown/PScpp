@@ -48,7 +48,7 @@ int main()
 		long long a, b, k;
 		cin >> a >> b >> k;
 		long long n = ((a - 1) * k + 1) % MOD;
-		long long m = (combination(n, a) * k * (b - 1) + 1) % MOD;
+		long long m = (combination(n, a) * k % MOD * (b - 1) + 1) % MOD;
 		cout << n << " " << m << "\n";
 	}
 }
