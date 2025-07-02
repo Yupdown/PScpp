@@ -2925,6 +2925,24 @@
     <ClCompile Include="BOJ34041.cpp">
       <Filter>Source Files\acmicpc</Filter>
     </ClCompile>
+    <ClCompile Include="CF1034-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1034-B.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1034-C.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1034-D.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1034-E.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1034-F.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BOJ11729.cpp">
