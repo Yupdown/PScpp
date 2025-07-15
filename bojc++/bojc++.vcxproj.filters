@@ -28,6 +28,9 @@
     <Filter Include="Source Files\scsc">
       <UniqueIdentifier>{a7a3dca3-ebda-43b7-9b0c-a8af862804e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ucpc">
+      <UniqueIdentifier>{f219aa65-ade6-4497-94a1-80fbf898a58d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="convex_hull.cpp">
@@ -2966,6 +2969,21 @@
     </ClCompile>
     <ClCompile Include="CF1032-F.cpp">
       <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="UCPC2025P-B.cpp">
+      <Filter>Source Files\ucpc</Filter>
+    </ClCompile>
+    <ClCompile Include="UCPC2025-A.cpp">
+      <Filter>Source Files\ucpc</Filter>
+    </ClCompile>
+    <ClCompile Include="UCPC2025-B.cpp">
+      <Filter>Source Files\ucpc</Filter>
+    </ClCompile>
+    <ClCompile Include="UCPC2025-I.cpp">
+      <Filter>Source Files\ucpc</Filter>
+    </ClCompile>
+    <ClCompile Include="UCPC2025-D.cpp">
+      <Filter>Source Files\ucpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
