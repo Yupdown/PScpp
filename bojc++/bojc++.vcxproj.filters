@@ -31,6 +31,9 @@
     <Filter Include="Source Files\ucpc">
       <UniqueIdentifier>{f219aa65-ade6-4497-94a1-80fbf898a58d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\matkor">
+      <UniqueIdentifier>{47314fcf-310c-4d10-bebe-cbeccd994922}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="convex_hull.cpp">
@@ -3014,6 +3017,21 @@
     </ClCompile>
     <ClCompile Include="BOJ14432.cpp">
       <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
+    <ClCompile Include="MATKOR2025-P.cpp">
+      <Filter>Source Files\matkor</Filter>
+    </ClCompile>
+    <ClCompile Include="MATKOR2025-A.cpp">
+      <Filter>Source Files\matkor</Filter>
+    </ClCompile>
+    <ClCompile Include="MATKOR2025-N.cpp">
+      <Filter>Source Files\matkor</Filter>
+    </ClCompile>
+    <ClCompile Include="MATKOR2025-G.cpp">
+      <Filter>Source Files\matkor</Filter>
+    </ClCompile>
+    <ClCompile Include="MATKOR2025-F.cpp">
+      <Filter>Source Files\matkor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
