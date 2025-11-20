@@ -3141,6 +3141,21 @@
     <ClCompile Include="CF1064-C.cpp">
       <Filter>Source Files\codeforces</Filter>
     </ClCompile>
+    <ClCompile Include="CF1065-A.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1065-B.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1065-C.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1065-D.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
+    <ClCompile Include="CF1065-F.cpp">
+      <Filter>Source Files\codeforces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BOJ11729.cpp">
