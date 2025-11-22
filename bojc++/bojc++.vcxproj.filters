@@ -3156,6 +3156,9 @@
     <ClCompile Include="CF1065-F.cpp">
       <Filter>Source Files\codeforces</Filter>
     </ClCompile>
+    <ClCompile Include="BOJ30912.cpp">
+      <Filter>Source Files\acmicpc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BOJ11729.cpp">
